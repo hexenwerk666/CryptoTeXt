@@ -17,9 +17,18 @@
         <junit.version>4.12</junit.version>
         <mockito-all.version>1.10.19</mockito-all.version>
         <powermock-core.version>1.6.4</powermock-core.version>
+        <bcprov-jdk15on.version>1.54</bcprov-jdk15on.version>
     </properties>
 
     <dependencies>
+        <!-- security -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bcprov-jdk15on.version}</version>
+        </dependency>
+
+
         <!-- Logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>

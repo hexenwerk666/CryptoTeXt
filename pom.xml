@@ -36,7 +36,7 @@
             <version>${logback-classic.version}</version>
         </dependency>
 
-        <!-- Testing Dependencies -->
+        <!-- testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

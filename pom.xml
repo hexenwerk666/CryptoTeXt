@@ -51,6 +51,7 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
             <version>${bcprov-jdk15on.version}</version>
+            <scope>compile</scope>
         </dependency>
 
 
@@ -59,6 +60,7 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback-classic.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- testing -->
@@ -90,6 +92,7 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>${powermock-core.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -3,6 +3,7 @@ package de.hsduesseldorf.medien.securesystems.editor;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
@@ -29,6 +30,9 @@ public class EditorController implements Initializable {
     MenuItem menuFileQuit;
 
     @FXML
+    ComboBox<CipherOptions> cipherOptionsComboBox;
+
+    @FXML
     TextArea text;
 
     File currentFile;
@@ -36,6 +40,7 @@ public class EditorController implements Initializable {
     @FXML
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        cipherOptionsComboBox.getItems().setAll(CipherOptions.values());
         menuFileSaveAs.setOnAction((event) -> saveAs());
         menuFileSave.setOnAction((event) -> save());
         menuFileLoad.setOnAction((event) -> load());

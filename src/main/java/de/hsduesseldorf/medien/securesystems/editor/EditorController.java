@@ -1,6 +1,5 @@
 package de.hsduesseldorf.medien.securesystems.editor;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

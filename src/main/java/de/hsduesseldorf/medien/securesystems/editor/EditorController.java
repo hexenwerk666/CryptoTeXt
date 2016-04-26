@@ -52,6 +52,8 @@ public class EditorController implements Initializable {
         if (currentFile != null) {
             fileChooser.setInitialDirectory(currentFile.getParentFile());
             fileChooser.setInitialFileName(currentFile.getName());
+        } else {
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         }
         fileChooser.setTitle("Save file");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"), new FileChooser.ExtensionFilter("All Files", "*.*"));
@@ -86,7 +88,9 @@ public class EditorController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load file");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"), new FileChooser.ExtensionFilter("All Files", "*.*"));
+        fileChooser.setInitialDirectory(currentFile != null ? currentFile.getParentFile() : new File(System.getProperty("user.home")));
         File file = fileChooser.showOpenDialog(new Stage());
+        if (file == null) return false;
         try {
             byte[] data = Files.readAllBytes(file.toPath());
             text.setText(new String(data));

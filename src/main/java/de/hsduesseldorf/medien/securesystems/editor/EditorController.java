@@ -45,7 +45,6 @@ public class EditorController implements Initializable {
     /**
      *{@inheritDoc}
      */
-    @FXML
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cipherOptionsComboBox.getItems().setAll(CipherOptions.values());

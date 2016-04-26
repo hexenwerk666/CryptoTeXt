@@ -17,6 +17,9 @@ import java.util.ResourceBundle;
 public class EditorController implements Initializable {
 
     @FXML
+    MenuItem menuFileSaveAs;
+
+    @FXML
     MenuItem menuFileSave;
 
     @FXML
@@ -28,16 +31,23 @@ public class EditorController implements Initializable {
     @FXML
     TextArea text;
 
+    File currentFile;
+
     @FXML
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        menuFileSaveAs.setOnAction((event) -> saveAs());
         menuFileSave.setOnAction((event) -> save());
         menuFileLoad.setOnAction((event) -> load());
         menuFileQuit.setOnAction((event) -> quit());
     }
 
-    private boolean save() {
+    private boolean saveAs() {
         FileChooser fileChooser = new FileChooser();
+        if (currentFile != null) {
+            fileChooser.setInitialDirectory(currentFile.getParentFile());
+            fileChooser.setInitialFileName(currentFile.getName());
+        }
         fileChooser.setTitle("Save file");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"), new FileChooser.ExtensionFilter("All Files", "*.*"));
         File file = fileChooser.showSaveDialog(new Stage());
@@ -45,6 +55,21 @@ public class EditorController implements Initializable {
         byte[] data = text.getText().getBytes();
         try {
             Files.write(file.toPath(), data);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean save() {
+        if (currentFile == null) {
+            return this.saveAs();
+        }
+
+        byte[] data = text.getText().getBytes();
+        try {
+            Files.write(currentFile.toPath(), data);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -64,8 +89,8 @@ public class EditorController implements Initializable {
             e.printStackTrace();
             return false;
         }
+        currentFile = file;
         return true;
-
     }
 
     private void quit() {

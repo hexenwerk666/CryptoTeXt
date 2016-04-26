@@ -8,12 +8,18 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Start JavaFX application
+ */
 public class EditorApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
 

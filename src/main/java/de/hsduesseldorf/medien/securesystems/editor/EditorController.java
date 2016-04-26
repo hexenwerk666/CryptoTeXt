@@ -15,6 +15,11 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for {@code editor.fxml}
+ *
+ * Handle menu actions and events
+ */
 public class EditorController implements Initializable {
 
     @FXML
@@ -37,6 +42,9 @@ public class EditorController implements Initializable {
 
     File currentFile;
 
+    /**
+     *{@inheritDoc}
+     */
     @FXML
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -47,6 +55,10 @@ public class EditorController implements Initializable {
         menuFileQuit.setOnAction((event) -> quit());
     }
 
+    /**
+     * save the file and choose the location via FileChooser
+     * @return {@code true} if a file has been saved, otherwise {@code false}
+     */
     private boolean saveAs() {
         FileChooser fileChooser = new FileChooser();
         if (currentFile != null) {
@@ -69,6 +81,10 @@ public class EditorController implements Initializable {
         return true;
     }
 
+    /**
+     * save the current file
+     * @return {@code true} if a file has been saved, otherwise {@code false}
+     */
     private boolean save() {
         if (currentFile == null) {
             return this.saveAs();
@@ -84,6 +100,10 @@ public class EditorController implements Initializable {
         return true;
     }
 
+    /**
+     * load a file via FileChooser
+     * @return {@code true} if a file has been loaded, otherwise {@code false}
+     */
     private boolean load() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load file");
@@ -102,6 +122,9 @@ public class EditorController implements Initializable {
         return true;
     }
 
+    /**
+     * quit application
+     */
     private void quit() {
         Platform.exit();
         System.exit(0);

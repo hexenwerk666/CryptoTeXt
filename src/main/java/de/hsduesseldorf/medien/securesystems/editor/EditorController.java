@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,7 +21,6 @@ import java.util.ResourceBundle;
 
 public class EditorController implements Initializable {
 
-    public static final String STATIC_FILE_PATH = "/tmp/editorTest";
     @FXML
     MenuItem menuFileSave;
 
@@ -41,10 +42,14 @@ public class EditorController implements Initializable {
     }
 
     private boolean save() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save file");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"), new FileChooser.ExtensionFilter("All Files", "*.*"));
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file == null) return false;
         byte[] data = text.getText().getBytes();
-        Path file = Paths.get(STATIC_FILE_PATH);
         try {
-            Files.write(file, data);
+            Files.write(file.toPath(), data);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -53,9 +58,12 @@ public class EditorController implements Initializable {
     }
 
     private boolean load() {
-        Path file = Paths.get(STATIC_FILE_PATH);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load file");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"), new FileChooser.ExtensionFilter("All Files", "*.*"));
+        File file = fileChooser.showOpenDialog(new Stage());
         try {
-            byte[] data = Files.readAllBytes(file);
+            byte[] data = Files.readAllBytes(file.toPath());
             text.setText(new String(data));
         } catch (IOException e) {
             e.printStackTrace();

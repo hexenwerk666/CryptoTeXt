@@ -29,7 +29,7 @@ public class EditorController implements Initializable {
     MenuItem menuFileSave;
 
     @FXML
-    MenuItem menuFileLoad;
+    MenuItem menuFileOpen;
 
     @FXML
     MenuItem menuFileQuit;
@@ -50,7 +50,7 @@ public class EditorController implements Initializable {
         cipherOptionsComboBox.getItems().setAll(CipherOptions.values());
         menuFileSaveAs.setOnAction((event) -> saveAs());
         menuFileSave.setOnAction((event) -> save());
-        menuFileLoad.setOnAction((event) -> load());
+        menuFileOpen.setOnAction((event) -> load());
         menuFileQuit.setOnAction((event) -> quit());
     }
 

@@ -13,6 +13,10 @@ import java.io.IOException;
  */
 public class EditorApp extends Application {
 
+    /**
+     * start javax application from super class
+     * @param args command line parameter
+     */
     public static void main(String[] args) {
         launch(args);
     }

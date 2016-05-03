@@ -69,7 +69,7 @@ public class EditorController implements Initializable {
             fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         }
         fileChooser.setTitle("Save file");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*.*"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*"));
         File file = fileChooser.showSaveDialog(new Stage());
         if (file == null) return false;
 
@@ -78,6 +78,7 @@ public class EditorController implements Initializable {
 
         try {
             JAXB.marshal(document, file);
+            currentFile = file;
         } catch (DataBindingException e) {
             e.printStackTrace();
             return false;
@@ -115,12 +116,14 @@ public class EditorController implements Initializable {
     private boolean load() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load file");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*.*"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*"));
         fileChooser.setInitialDirectory(currentFile != null ? currentFile.getParentFile() : new File(System.getProperty("user.home")));
         File file = fileChooser.showOpenDialog(new Stage());
         if (file == null) return false;
         try {
-            byte[] data = JAXB.unmarshal(file, Document.class).getPayload();
+            Document document = JAXB.unmarshal(file, Document.class);
+            byte[] data = document.getPayload();
+            cipherOptionsComboBox.setValue(document.getCipherOptions());
             text.setText(new String(data));
         } catch (DataBindingException e) {
             e.printStackTrace();

@@ -6,16 +6,21 @@ import javax.xml.bind.JAXB;
 import java.io.File;
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;
+
 public class DocumentTest {
 
     @Test
     public void test() throws Exception {
         Document document = new Document();
         document.setCipherOptions(CipherOptions.AES);
-        document.setPayload(new byte[] {1,2,3,4,5,6,7});
+        String expected = "Hallo Welt";
+        document.setPayload(expected.getBytes());
         document.setLastModified(new Date());
         File file = new File("target/text.xml");
         JAXB.marshal(document,file);
+        Document readFromFile = JAXB.unmarshal(file,Document.class);
+        assertEquals(document,readFromFile);
     }
 
 }

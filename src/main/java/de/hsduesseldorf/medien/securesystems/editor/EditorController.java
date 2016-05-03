@@ -9,15 +9,16 @@ import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.xml.bind.DataBindingException;
+import javax.xml.bind.JAXB;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 /**
  * Controller for {@code editor.fxml}
- *
+ * <p>
  * Handle menu actions and events
  */
 public class EditorController implements Initializable {
@@ -43,7 +44,7 @@ public class EditorController implements Initializable {
     File currentFile;
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -56,6 +57,7 @@ public class EditorController implements Initializable {
 
     /**
      * save the file and choose the location via FileChooser
+     *
      * @return {@code true} if a file has been saved, otherwise {@code false}
      */
     private boolean saveAs() {
@@ -67,13 +69,16 @@ public class EditorController implements Initializable {
             fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         }
         fileChooser.setTitle("Save file");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"), new FileChooser.ExtensionFilter("All Files", "*.*"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*.*"));
         File file = fileChooser.showSaveDialog(new Stage());
         if (file == null) return false;
+
         byte[] data = text.getText().getBytes();
+        Document document = new Document(new Date(), cipherOptionsComboBox.getValue(), data);
+
         try {
-            Files.write(file.toPath(), data);
-        } catch (IOException e) {
+            JAXB.marshal(document, file);
+        } catch (DataBindingException e) {
             e.printStackTrace();
             return false;
         }
@@ -82,6 +87,7 @@ public class EditorController implements Initializable {
 
     /**
      * save the current file
+     *
      * @return {@code true} if a file has been saved, otherwise {@code false}
      */
     private boolean save() {
@@ -90,9 +96,11 @@ public class EditorController implements Initializable {
         }
 
         byte[] data = text.getText().getBytes();
+        Document document = new Document(new Date(), cipherOptionsComboBox.getValue(), data);
+
         try {
-            Files.write(currentFile.toPath(), data);
-        } catch (IOException e) {
+            JAXB.marshal(document, currentFile);
+        } catch (DataBindingException e) {
             e.printStackTrace();
             return false;
         }
@@ -101,19 +109,20 @@ public class EditorController implements Initializable {
 
     /**
      * load a file via FileChooser
+     *
      * @return {@code true} if a file has been loaded, otherwise {@code false}
      */
     private boolean load() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load file");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"), new FileChooser.ExtensionFilter("All Files", "*.*"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*.*"));
         fileChooser.setInitialDirectory(currentFile != null ? currentFile.getParentFile() : new File(System.getProperty("user.home")));
         File file = fileChooser.showOpenDialog(new Stage());
         if (file == null) return false;
         try {
-            byte[] data = Files.readAllBytes(file.toPath());
+            byte[] data = JAXB.unmarshal(file, Document.class).getPayload();
             text.setText(new String(data));
-        } catch (IOException e) {
+        } catch (DataBindingException e) {
             e.printStackTrace();
             return false;
         }

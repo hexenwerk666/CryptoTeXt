@@ -1,7 +1,6 @@
 package de.hsduesseldorf.medien.securesystems.editor;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -16,6 +15,16 @@ public class Document {
     private CipherOptions cipherOptions;
 
     private byte[] payload;
+
+    public Document(Date lastModified, CipherOptions cipherOptions, byte[] payload) {
+        this.lastModified = lastModified;
+        this.cipherOptions = cipherOptions;
+        this.payload = payload;
+    }
+
+    public Document() {
+        // default
+    }
 
     public Date getLastModified() {
         return lastModified;
@@ -39,16 +48,6 @@ public class Document {
 
     public void setPayload(byte[] payload) {
         this.payload = payload;
-    }
-
-    public Document(Date lastModified, CipherOptions cipherOptions, byte[] payload) {
-        this.lastModified = lastModified;
-        this.cipherOptions = cipherOptions;
-        this.payload = payload;
-    }
-
-    public Document() {
-
     }
 
     @Override

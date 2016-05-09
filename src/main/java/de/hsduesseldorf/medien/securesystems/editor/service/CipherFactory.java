@@ -8,6 +8,8 @@ import javax.crypto.Cipher;
 
 public class CipherFactory {
 
+    private static final String SALT = "salty";
+
     public static Cipher getInstance(CipherType cipherType, CipherMode cipherMode, Padding padding) {
         return null;
     }

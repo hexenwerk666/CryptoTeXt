@@ -1,5 +1,6 @@
 package de.hsduesseldorf.medien.securesystems.editor;
 
+import de.hsduesseldorf.medien.securesystems.editor.options.CipherType;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,7 +37,7 @@ public class EditorController implements Initializable {
     MenuItem menuFileQuit;
 
     @FXML
-    ComboBox<CipherOptions> cipherOptionsComboBox;
+    ComboBox<CipherType> cipherOptionsComboBox;
 
     @FXML
     TextArea text;
@@ -48,7 +49,7 @@ public class EditorController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        cipherOptionsComboBox.getItems().setAll(CipherOptions.values());
+        cipherOptionsComboBox.getItems().setAll(CipherType.values());
         menuFileSaveAs.setOnAction((event) -> saveAs());
         menuFileSave.setOnAction((event) -> save());
         menuFileOpen.setOnAction((event) -> load());
@@ -123,7 +124,7 @@ public class EditorController implements Initializable {
         try {
             Document document = JAXB.unmarshal(file, Document.class);
             byte[] data = document.getPayload();
-            cipherOptionsComboBox.setValue(document.getCipherOptions());
+            cipherOptionsComboBox.setValue(document.getCipherType());
             text.setText(new String(data));
         } catch (DataBindingException e) {
             e.printStackTrace();

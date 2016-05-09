@@ -1,5 +1,9 @@
 package de.hsduesseldorf.medien.securesystems.editor;
 
+import de.hsduesseldorf.medien.securesystems.editor.options.CipherMode;
+import de.hsduesseldorf.medien.securesystems.editor.options.CipherType;
+import de.hsduesseldorf.medien.securesystems.editor.options.Padding;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
 import java.util.Date;
@@ -12,13 +16,29 @@ public class Document {
 
     private Date lastModified;
 
-    private CipherOptions cipherOptions;
+    private CipherType cipherType;
+
+    private CipherMode cipherMode;
+
+    private Padding padding;
+
+    private Integer length;
 
     private byte[] payload;
 
-    public Document(Date lastModified, CipherOptions cipherOptions, byte[] payload) {
+    @Deprecated
+    public Document(Date lastModified, CipherType cipherType, byte[] payload) {
         this.lastModified = lastModified;
-        this.cipherOptions = cipherOptions;
+        this.cipherType = cipherType;
+        this.payload = payload;
+    }
+
+    public Document(Date lastModified, CipherType cipherType, CipherMode cipherMode, Padding padding, Integer length, byte[] payload) {
+        this.lastModified = lastModified;
+        this.cipherType = cipherType;
+        this.cipherMode = cipherMode;
+        this.padding = padding;
+        this.length = length;
         this.payload = payload;
     }
 
@@ -34,12 +54,36 @@ public class Document {
         this.lastModified = lastModified;
     }
 
-    public CipherOptions getCipherOptions() {
-        return cipherOptions;
+    public CipherType getCipherType() {
+        return cipherType;
     }
 
-    public void setCipherOptions(CipherOptions cipherOptions) {
-        this.cipherOptions = cipherOptions;
+    public CipherMode getCipherMode() {
+        return cipherMode;
+    }
+
+    public void setCipherMode(CipherMode cipherMode) {
+        this.cipherMode = cipherMode;
+    }
+
+    public Padding getPadding() {
+        return padding;
+    }
+
+    public void setPadding(Padding padding) {
+        this.padding = padding;
+    }
+
+    public Integer getLength() {
+        return length;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
+    }
+
+    public void setCipherType(CipherType cipherType) {
+        this.cipherType = cipherType;
     }
 
     public byte[] getPayload() {
@@ -59,7 +103,7 @@ public class Document {
 
         if (lastModified != null ? !lastModified.equals(document.lastModified) : document.lastModified != null)
             return false;
-        if (cipherOptions != document.cipherOptions) return false;
+        if (cipherType != document.cipherType) return false;
         return Arrays.equals(payload, document.payload);
 
     }
@@ -67,7 +111,7 @@ public class Document {
     @Override
     public int hashCode() {
         int result = lastModified != null ? lastModified.hashCode() : 0;
-        result = 31 * result + (cipherOptions != null ? cipherOptions.hashCode() : 0);
+        result = 31 * result + (cipherType != null ? cipherType.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(payload);
         return result;
     }

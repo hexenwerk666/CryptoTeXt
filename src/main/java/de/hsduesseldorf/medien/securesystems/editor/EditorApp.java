@@ -5,8 +5,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
+import java.security.Security;
 
 /**
  * Start JavaFX application

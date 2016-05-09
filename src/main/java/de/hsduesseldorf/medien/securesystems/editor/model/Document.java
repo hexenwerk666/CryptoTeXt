@@ -1,4 +1,4 @@
-package de.hsduesseldorf.medien.securesystems.editor;
+package de.hsduesseldorf.medien.securesystems.editor.model;
 
 import de.hsduesseldorf.medien.securesystems.editor.options.CipherMode;
 import de.hsduesseldorf.medien.securesystems.editor.options.CipherType;

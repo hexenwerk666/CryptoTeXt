@@ -1,5 +1,6 @@
-package de.hsduesseldorf.medien.securesystems.editor;
+package de.hsduesseldorf.medien.securesystems.editor.controller;
 
+import de.hsduesseldorf.medien.securesystems.editor.model.Document;
 import de.hsduesseldorf.medien.securesystems.editor.options.CipherType;
 import javafx.application.Platform;
 import javafx.fxml.FXML;

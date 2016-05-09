@@ -1,5 +1,6 @@
-package de.hsduesseldorf.medien.securesystems.editor;
+package de.hsduesseldorf.medien.securesystems.editor.model;
 
+import de.hsduesseldorf.medien.securesystems.editor.model.Document;
 import de.hsduesseldorf.medien.securesystems.editor.options.CipherType;
 import org.junit.Test;
 

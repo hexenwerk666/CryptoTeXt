@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.input.KeyCodeCombination?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-
-<AnchorPane prefHeight="427.0" prefWidth="598.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hsduesseldorf.medien.securesystems.editor.controller.EditorController">
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="427.0" prefWidth="598.0"
+            xmlns="http://javafx.com/javafx/8.0.65"
+            fx:controller="de.hsduesseldorf.medien.securesystems.editor.controller.EditorController">
     <children>
-        <VBox layoutX="-227.0" layoutY="-156.0" prefHeight="356.0" prefWidth="447.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox layoutX="-227.0" layoutY="-156.0" prefHeight="356.0" prefWidth="447.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <MenuBar>
                     <menus>
                         <Menu fx:id="menuFile" mnemonicParsing="false" text="File">
                             <items>
                                 <MenuItem fx:id="menuFileSave" mnemonicParsing="false" text="Save">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                           </accelerator></MenuItem>
+                                    <accelerator>
+                                        <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP"
+                                                            shortcut="DOWN"/>
+                                    </accelerator>
+                                </MenuItem>
                                 <MenuItem fx:id="menuFileSaveAs" mnemonicParsing="false" text="Save As...">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
-                           </accelerator></MenuItem>
+                                    <accelerator>
+                                        <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="DOWN"
+                                                            shortcut="DOWN"/>
+                                    </accelerator>
+                                </MenuItem>
                                 <MenuItem fx:id="menuFileOpen" mnemonicParsing="false" text="Open...">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                           </accelerator></MenuItem>
-                                <MenuItem fx:id="menuFileQuit" mnemonicParsing="false" text="Quit" />
+                                    <accelerator>
+                                        <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP"
+                                                            shortcut="DOWN"/>
+                                    </accelerator>
+                                </MenuItem>
+                                <MenuItem fx:id="menuFileQuit" mnemonicParsing="false" text="Quit"/>
                             </items>
                         </Menu>
-                        <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit" />
-                        <Menu fx:id="menuHelp" mnemonicParsing="false" text="Help" />
+                        <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit"/>
+                        <Menu fx:id="menuHelp" mnemonicParsing="false" text="Help"/>
                     </menus>
                 </MenuBar>
-                <TextArea fx:id="text" prefHeight="379.0" prefWidth="600.0" />
+                <TextArea fx:id="text" prefHeight="379.0" prefWidth="600.0"/>
                 <ButtonBar prefHeight="32.0" prefWidth="631.0">
                     <buttons>
-                        <ComboBox fx:id="cipherOptionsComboBox" prefHeight="27.0" prefWidth="150.0" promptText="Cipher" />
+                        <ComboBox fx:id="chipherSelection" prefHeight="27.0" prefWidth="150.0"
+                                  promptText="Cipher"/>
+                        <ComboBox fx:id="blockModeSelection" prefHeight="27.0" prefWidth="150.0" promptText="Mode"/>
+                        <ComboBox fx:id="paddingSelection" prefHeight="27.0" prefWidth="150.0"
+                                  promptText="Padding"/>
                     </buttons>
                 </ButtonBar>
             </children>

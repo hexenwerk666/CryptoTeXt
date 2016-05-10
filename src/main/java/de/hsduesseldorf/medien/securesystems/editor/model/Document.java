@@ -24,6 +24,8 @@ public class Document {
 
     private Integer length;
 
+    private Boolean encrypted;
+
     private byte[] payload;
 
     @Deprecated

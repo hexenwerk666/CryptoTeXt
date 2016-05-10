@@ -1,7 +1,9 @@
 package de.hsduesseldorf.medien.securesystems.editor.controller;
 
 import de.hsduesseldorf.medien.securesystems.editor.model.Document;
+import de.hsduesseldorf.medien.securesystems.editor.options.BlockMode;
 import de.hsduesseldorf.medien.securesystems.editor.options.CipherName;
+import de.hsduesseldorf.medien.securesystems.editor.options.Padding;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +17,7 @@ import javax.xml.bind.DataBindingException;
 import javax.xml.bind.JAXB;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -38,7 +41,13 @@ public class EditorController implements Initializable {
     MenuItem menuFileQuit;
 
     @FXML
-    ComboBox<CipherName> cipherOptionsComboBox;
+    ComboBox<CipherName> chipherSelection;
+
+    @FXML
+    ComboBox<BlockMode> blockModeSelection;
+
+    @FXML
+    ComboBox<Padding> paddingSelection;
 
     @FXML
     TextArea text;
@@ -50,7 +59,8 @@ public class EditorController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        cipherOptionsComboBox.getItems().setAll(CipherName.values());
+        chipherSelection.getItems().setAll(CipherName.values());
+        chipherSelection.setOnAction((event -> updateSelectBoxes()));
         menuFileSaveAs.setOnAction((event) -> saveAs());
         menuFileSave.setOnAction((event) -> save());
         menuFileOpen.setOnAction((event) -> load());
@@ -76,7 +86,7 @@ public class EditorController implements Initializable {
         if (file == null) return false;
 
         byte[] data = text.getText().getBytes();
-        Document document = new Document(new Date(), cipherOptionsComboBox.getValue(), data);
+        Document document = new Document(new Date(), chipherSelection.getValue(), data);
 
         try {
             JAXB.marshal(document, file);
@@ -86,6 +96,11 @@ public class EditorController implements Initializable {
             return false;
         }
         return true;
+    }
+
+    private void updateSelectBoxes() {
+        blockModeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedBlockModi() : new ArrayList<BlockMode>());
+        paddingSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedPaddings() : new ArrayList<Padding>());
     }
 
     /**
@@ -99,7 +114,7 @@ public class EditorController implements Initializable {
         }
 
         byte[] data = text.getText().getBytes();
-        Document document = new Document(new Date(), cipherOptionsComboBox.getValue(), data);
+        Document document = new Document(new Date(), chipherSelection.getValue(), data);
 
         try {
             JAXB.marshal(document, currentFile);
@@ -125,7 +140,7 @@ public class EditorController implements Initializable {
         try {
             Document document = JAXB.unmarshal(file, Document.class);
             byte[] data = document.getPayload();
-            cipherOptionsComboBox.setValue(document.getCipherName());
+            chipherSelection.setValue(document.getCipherName());
             text.setText(new String(data));
         } catch (DataBindingException e) {
             e.printStackTrace();

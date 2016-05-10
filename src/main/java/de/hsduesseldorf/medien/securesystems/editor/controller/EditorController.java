@@ -6,7 +6,10 @@ import de.hsduesseldorf.medien.securesystems.editor.options.CipherName;
 import de.hsduesseldorf.medien.securesystems.editor.options.Padding;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
@@ -16,6 +19,7 @@ import javafx.stage.Stage;
 import javax.xml.bind.DataBindingException;
 import javax.xml.bind.JAXB;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +54,9 @@ public class EditorController implements Initializable {
     ComboBox<Padding> paddingSelection;
 
     @FXML
+    Button submitOptions;
+
+    @FXML
     TextArea text;
 
     File currentFile;
@@ -73,6 +80,18 @@ public class EditorController implements Initializable {
      * @return {@code true} if a file has been saved, otherwise {@code false}
      */
     private boolean saveAs() {
+        try {
+            Scene optionWindow = FXMLLoader.load(getClass().getResource("/editor.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(optionWindow);
+            stage.show();
+            submitOptions.setOnAction((event -> {
+                stage.close();
+            }));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         FileChooser fileChooser = new FileChooser();
         if (currentFile != null) {
             fileChooser.setInitialDirectory(currentFile.getParentFile());

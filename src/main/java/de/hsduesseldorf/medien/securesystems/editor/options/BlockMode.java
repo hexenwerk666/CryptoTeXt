@@ -1,5 +1,5 @@
 package de.hsduesseldorf.medien.securesystems.editor.options;
 
-public enum CipherMode {
+public enum BlockMode {
     ECB, CBC;
 }

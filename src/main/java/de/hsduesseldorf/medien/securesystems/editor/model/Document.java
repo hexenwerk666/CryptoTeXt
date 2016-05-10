@@ -1,7 +1,7 @@
 package de.hsduesseldorf.medien.securesystems.editor.model;
 
-import de.hsduesseldorf.medien.securesystems.editor.options.CipherMode;
-import de.hsduesseldorf.medien.securesystems.editor.options.CipherType;
+import de.hsduesseldorf.medien.securesystems.editor.options.BlockMode;
+import de.hsduesseldorf.medien.securesystems.editor.options.CipherName;
 import de.hsduesseldorf.medien.securesystems.editor.options.Padding;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -16,9 +16,9 @@ public class Document {
 
     private Date lastModified;
 
-    private CipherType cipherType;
+    private CipherName cipherName;
 
-    private CipherMode cipherMode;
+    private BlockMode blockMode;
 
     private Padding padding;
 
@@ -27,16 +27,16 @@ public class Document {
     private byte[] payload;
 
     @Deprecated
-    public Document(Date lastModified, CipherType cipherType, byte[] payload) {
+    public Document(Date lastModified, CipherName cipherName, byte[] payload) {
         this.lastModified = lastModified;
-        this.cipherType = cipherType;
+        this.cipherName = cipherName;
         this.payload = payload;
     }
 
-    public Document(Date lastModified, CipherType cipherType, CipherMode cipherMode, Padding padding, Integer length, byte[] payload) {
+    public Document(Date lastModified, CipherName cipherName, BlockMode blockMode, Padding padding, Integer length, byte[] payload) {
         this.lastModified = lastModified;
-        this.cipherType = cipherType;
-        this.cipherMode = cipherMode;
+        this.cipherName = cipherName;
+        this.blockMode = blockMode;
         this.padding = padding;
         this.length = length;
         this.payload = payload;
@@ -54,16 +54,16 @@ public class Document {
         this.lastModified = lastModified;
     }
 
-    public CipherType getCipherType() {
-        return cipherType;
+    public CipherName getCipherName() {
+        return cipherName;
     }
 
-    public CipherMode getCipherMode() {
-        return cipherMode;
+    public BlockMode getBlockMode() {
+        return blockMode;
     }
 
-    public void setCipherMode(CipherMode cipherMode) {
-        this.cipherMode = cipherMode;
+    public void setBlockMode(BlockMode blockMode) {
+        this.blockMode = blockMode;
     }
 
     public Padding getPadding() {
@@ -82,8 +82,8 @@ public class Document {
         this.length = length;
     }
 
-    public void setCipherType(CipherType cipherType) {
-        this.cipherType = cipherType;
+    public void setCipherName(CipherName cipherName) {
+        this.cipherName = cipherName;
     }
 
     public byte[] getPayload() {
@@ -103,7 +103,7 @@ public class Document {
 
         if (lastModified != null ? !lastModified.equals(document.lastModified) : document.lastModified != null)
             return false;
-        if (cipherType != document.cipherType) return false;
+        if (cipherName != document.cipherName) return false;
         return Arrays.equals(payload, document.payload);
 
     }
@@ -111,7 +111,7 @@ public class Document {
     @Override
     public int hashCode() {
         int result = lastModified != null ? lastModified.hashCode() : 0;
-        result = 31 * result + (cipherType != null ? cipherType.hashCode() : 0);
+        result = 31 * result + (cipherName != null ? cipherName.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(payload);
         return result;
     }

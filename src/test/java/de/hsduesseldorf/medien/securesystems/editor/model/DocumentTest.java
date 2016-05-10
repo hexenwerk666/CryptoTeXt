@@ -1,7 +1,6 @@
 package de.hsduesseldorf.medien.securesystems.editor.model;
 
-import de.hsduesseldorf.medien.securesystems.editor.model.Document;
-import de.hsduesseldorf.medien.securesystems.editor.options.CipherType;
+import de.hsduesseldorf.medien.securesystems.editor.options.CipherName;
 import org.junit.Test;
 
 import javax.xml.bind.JAXB;
@@ -15,7 +14,7 @@ public class DocumentTest {
     @Test
     public void test() throws Exception {
         Document document = new Document();
-        document.setCipherType(CipherType.AES);
+        document.setCipherName(CipherName.AES);
         String expected = "Hallo Welt";
         document.setPayload(expected.getBytes());
         document.setLastModified(new Date());

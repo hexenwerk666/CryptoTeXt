@@ -22,11 +22,12 @@ public class Document {
 
     private Padding padding;
 
-    private Integer length;
+    private Integer blockSize;
 
-    private Boolean encrypted;
+    private Integer payloadLength;
 
     private byte[] payload;
+
 
     @Deprecated
     public Document(Date lastModified, CipherName cipherName, byte[] payload) {
@@ -35,12 +36,13 @@ public class Document {
         this.payload = payload;
     }
 
-    public Document(Date lastModified, CipherName cipherName, BlockMode blockMode, Padding padding, Integer length, byte[] payload) {
+    public Document(Date lastModified, CipherName cipherName, BlockMode blockMode, Padding padding, Integer blockSize, Integer payloadLength, byte[] payload) {
         this.lastModified = lastModified;
         this.cipherName = cipherName;
         this.blockMode = blockMode;
         this.padding = padding;
-        this.length = length;
+        this.blockSize = blockSize;
+        this.payloadLength = payloadLength;
         this.payload = payload;
     }
 
@@ -60,6 +62,10 @@ public class Document {
         return cipherName;
     }
 
+    public void setCipherName(CipherName cipherName) {
+        this.cipherName = cipherName;
+    }
+
     public BlockMode getBlockMode() {
         return blockMode;
     }
@@ -76,16 +82,20 @@ public class Document {
         this.padding = padding;
     }
 
-    public Integer getLength() {
-        return length;
+    public Integer getBlockSize() {
+        return blockSize;
     }
 
-    public void setLength(Integer length) {
-        this.length = length;
+    public void setBlockSize(Integer blockSize) {
+        this.blockSize = blockSize;
     }
 
-    public void setCipherName(CipherName cipherName) {
-        this.cipherName = cipherName;
+    public Integer getPayloadLength() {
+        return payloadLength;
+    }
+
+    public void setPayloadLength(Integer payloadLength) {
+        this.payloadLength = payloadLength;
     }
 
     public byte[] getPayload() {

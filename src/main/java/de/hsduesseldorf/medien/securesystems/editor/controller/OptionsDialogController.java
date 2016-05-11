@@ -17,7 +17,6 @@ import java.util.ResourceBundle;
 public class OptionsDialogController implements Initializable {
 
     MainApp mainApp;
-    EditorController editorController;
     Options selectedOptions;
 
 
@@ -43,10 +42,6 @@ public class OptionsDialogController implements Initializable {
     private void updateSelectBoxes() {
         blockModeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedBlockModi() : new ArrayList<BlockMode>());
         paddingSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedPaddings() : new ArrayList<Padding>());
-    }
-
-    public void setEditorController(EditorController editorController) {
-        this.editorController = editorController;
     }
 
     public void submit() {

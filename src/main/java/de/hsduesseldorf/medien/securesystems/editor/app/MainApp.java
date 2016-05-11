@@ -65,7 +65,6 @@ public class MainApp extends Application {
     public void initDependencies() {
         this.editorController.setOptionsDialogController(this.optionsDialogController);
         this.editorController.setMainApp(this);
-        this.optionsDialogController.setEditorController(this.editorController);
         this.optionsDialogController.setMainApp(this);
     }
 

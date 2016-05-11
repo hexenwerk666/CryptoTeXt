@@ -1,13 +1,18 @@
 package de.hsduesseldorf.medien.securesystems.editor.controller;
 
+import de.hsduesseldorf.medien.securesystems.editor.app.MainApp;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class EditorController implements Initializable {
+
+    MainApp mainApp;
 
     @FXML
     MenuItem menuFileSave;
@@ -30,9 +35,12 @@ public class EditorController implements Initializable {
         menuFileQuit.setOnAction(e -> quit());
     }
 
+    public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
+    }
 
     void save() {
-
+        mainApp.getOptionsDialog().show();
     }
 
     void saveAs() {

@@ -1,9 +1,12 @@
 package de.hsduesseldorf.medien.securesystems.editor.app;
 
+import de.hsduesseldorf.medien.securesystems.editor.controller.EditorController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -11,8 +14,7 @@ import java.io.IOException;
 public class MainApp extends Application {
 
     private Stage primaryStage;
-    private AnchorPane rootLayout;
-    private AnchorPane optionsDialog;
+    private Stage optionsDialog;
 
     public static void main(String[] args) {
         launch(args);
@@ -23,16 +25,18 @@ public class MainApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("CryptoTeXt");
         initRootLayout();
+        initOptionsDialog();
     }
 
     public void initRootLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/editor.fxml"));
-            rootLayout = (AnchorPane) loader.load();
-
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
+            AnchorPane element = loader.load();
+            EditorController editorController = loader.getController();
+            editorController.setMainApp(this);
+            Scene root = new Scene(element);
+            primaryStage.setScene(root);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,11 +46,22 @@ public class MainApp extends Application {
     public void initOptionsDialog() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/optionsDialog"));
-            optionsDialog = (AnchorPane) loader.load();
+            loader.setLocation(getClass().getResource("/optionsDialog.fxml"));
+            VBox element = (VBox) loader.load();
+            optionsDialog = new Stage();
+            optionsDialog.initModality(Modality.APPLICATION_MODAL);
+            optionsDialog.setScene(new Scene(element));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public Stage getOptionsDialog() {
+        return optionsDialog;
     }
 }

@@ -17,6 +17,9 @@ public class MainApp extends Application {
     private Stage primaryStage;
     private Stage optionsDialog;
 
+    private OptionsDialogController optionsDialogController;
+    private EditorController editorController;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -27,6 +30,7 @@ public class MainApp extends Application {
         this.primaryStage.setTitle("CryptoTeXt");
         initRootLayout();
         initOptionsDialog();
+        initDependencies();
     }
 
     public void initRootLayout() {
@@ -34,11 +38,10 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/editor.fxml"));
             AnchorPane element = loader.load();
-            EditorController editorController = loader.getController();
-            editorController.setMainApp(this);
+            this.editorController = loader.getController();
             Scene root = new Scene(element);
-            primaryStage.setScene(root);
-            primaryStage.show();
+            this.primaryStage.setScene(root);
+            this.primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,15 +52,21 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/optionsDialog.fxml"));
             VBox element = (VBox) loader.load();
-            OptionsDialogController optionsDialogController = loader.getController();
-            optionsDialogController.setMainApp(this);
-            optionsDialog = new Stage();
-            optionsDialog.initModality(Modality.APPLICATION_MODAL);
-            optionsDialog.setScene(new Scene(element));
+            this.optionsDialogController = loader.getController();
+            this.optionsDialog = new Stage();
+            this.optionsDialog.initModality(Modality.APPLICATION_MODAL);
+            this.optionsDialog.setScene(new Scene(element));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public void initDependencies() {
+        this.editorController.setOptionsDialogController(this.optionsDialogController);
+        this.editorController.setMainApp(this);
+        this.optionsDialogController.setEditorController(this.editorController);
+        this.optionsDialogController.setMainApp(this);
     }
 
     public Stage getPrimaryStage() {

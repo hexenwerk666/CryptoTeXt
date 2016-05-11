@@ -1,6 +1,7 @@
 package de.hsduesseldorf.medien.securesystems.editor.controller;
 
 import de.hsduesseldorf.medien.securesystems.editor.app.MainApp;
+import de.hsduesseldorf.medien.securesystems.editor.model.Options;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
@@ -8,9 +9,13 @@ import javafx.scene.control.MenuItem;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class EditorController implements Initializable, MainAppSettable {
+public class EditorController implements Initializable {
 
     MainApp mainApp;
+    OptionsDialogController optionsDialogController;
+
+    Options selectedOptions;
+
 
     @FXML
     MenuItem menuFileSave;
@@ -25,6 +30,7 @@ public class EditorController implements Initializable, MainAppSettable {
     MenuItem menuFileQuit;
 
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         menuFileOpen.setOnAction(e -> open());
@@ -33,8 +39,16 @@ public class EditorController implements Initializable, MainAppSettable {
         menuFileQuit.setOnAction(e -> quit());
     }
 
+    public void setOptionsDialogController(OptionsDialogController optionsDialogController) {
+        this.optionsDialogController = optionsDialogController;
+    }
+
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
+    }
+
+    public void setSelectedOptions(Options selectedOptions) {
+        this.selectedOptions = selectedOptions;
     }
 
     void save() {

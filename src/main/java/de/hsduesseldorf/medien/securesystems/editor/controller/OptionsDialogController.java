@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class OptionsDialogController implements Initializable {
@@ -33,6 +34,13 @@ public class OptionsDialogController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         submitOptions.setOnAction(e -> submit());
+        chipherSelection.getItems().setAll(CipherName.values());
+        chipherSelection.setOnAction((e -> updateSelectBoxes()));
+    }
+
+    private void updateSelectBoxes() {
+        blockModeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedBlockModi() : new ArrayList<BlockMode>());
+        paddingSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedPaddings() : new ArrayList<Padding>());
     }
 
     public void setEditorController(EditorController editorController) {
@@ -42,6 +50,7 @@ public class OptionsDialogController implements Initializable {
     public void submit() {
         Options options = new Options(chipherSelection.getValue(), blockModeSelection.getValue(), paddingSelection.getValue());
         this.editorController.setSelectedOptions(options);
+        mainApp.getOptionsDialog().hide();
     }
 
 

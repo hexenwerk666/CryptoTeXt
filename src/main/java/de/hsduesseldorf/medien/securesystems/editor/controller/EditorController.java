@@ -30,7 +30,6 @@ public class EditorController implements Initializable {
     MenuItem menuFileQuit;
 
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         menuFileOpen.setOnAction(e -> open());
@@ -56,7 +55,7 @@ public class EditorController implements Initializable {
     }
 
     void saveAs() {
-
+        mainApp.getOptionsDialog().show();
     }
 
     void open() {

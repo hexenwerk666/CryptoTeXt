@@ -36,6 +36,16 @@ public class Document {
         this.payload = payload;
     }
 
+    public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] payload) {
+        this.lastModified = lastModified;
+        this.cipherName = options.cipherName;
+        this.blockMode = options.blockMode;
+        this.padding = options.padding;
+        this.blockSize = blockSize;
+        this.payloadLength = payloadLength;
+        this.payload = payload;
+    }
+
     public Document() {
         // default
     }

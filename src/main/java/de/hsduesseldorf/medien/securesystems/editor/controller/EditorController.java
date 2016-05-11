@@ -1,42 +1,19 @@
 package de.hsduesseldorf.medien.securesystems.editor.controller;
 
-import de.hsduesseldorf.medien.securesystems.editor.model.Document;
-import de.hsduesseldorf.medien.securesystems.editor.options.BlockMode;
-import de.hsduesseldorf.medien.securesystems.editor.options.CipherName;
-import de.hsduesseldorf.medien.securesystems.editor.options.Padding;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
-import javax.xml.bind.DataBindingException;
-import javax.xml.bind.JAXB;
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.ResourceBundle;
 
-/**
- * Controller for {@code editor.fxml}
- * <p>
- * Handle menu actions and events
- */
 public class EditorController implements Initializable {
 
     @FXML
-    MenuItem menuFileSaveAs;
+    MenuItem menuFileSave;
 
     @FXML
-    MenuItem menuFileSave;
+    MenuItem menuFileSaveAs;
 
     @FXML
     MenuItem menuFileOpen;
@@ -44,136 +21,28 @@ public class EditorController implements Initializable {
     @FXML
     MenuItem menuFileQuit;
 
-    @FXML
-    ComboBox<CipherName> chipherSelection;
 
-    @FXML
-    ComboBox<BlockMode> blockModeSelection;
-
-    @FXML
-    ComboBox<Padding> paddingSelection;
-
-    @FXML
-    Button submitOptions;
-
-    @FXML
-    TextArea text;
-
-    File currentFile;
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        chipherSelection.getItems().setAll(CipherName.values());
-        chipherSelection.setOnAction((event -> updateSelectBoxes()));
-        menuFileSaveAs.setOnAction((event) -> saveAs());
-        menuFileSave.setOnAction((event) -> save());
-        menuFileOpen.setOnAction((event) -> load());
-        menuFileQuit.setOnAction((event) -> quit());
+        menuFileOpen.setOnAction(e -> open());
+        menuFileSave.setOnAction(e -> save());
+        menuFileSaveAs.setOnAction(e -> saveAs());
+        menuFileQuit.setOnAction(e -> quit());
     }
 
-    /**
-     * save the file and choose the location via FileChooser
-     *
-     * @return {@code true} if a file has been saved, otherwise {@code false}
-     */
-    private boolean saveAs() {
-        try {
-            Scene optionWindow = FXMLLoader.load(getClass().getResource("/editor.fxml"));
-            Stage stage = new Stage();
-            stage.setScene(optionWindow);
-            stage.show();
-            submitOptions.setOnAction((event -> {
-                stage.close();
-            }));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        FileChooser fileChooser = new FileChooser();
-        if (currentFile != null) {
-            fileChooser.setInitialDirectory(currentFile.getParentFile());
-            fileChooser.setInitialFileName(currentFile.getName());
-        } else {
-            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        }
-        fileChooser.setTitle("Save file");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*"));
-        File file = fileChooser.showSaveDialog(new Stage());
-        if (file == null) return false;
+    void save() {
 
-        byte[] data = text.getText().getBytes();
-        Document document = new Document(new Date(), chipherSelection.getValue(), data);
-
-        try {
-            JAXB.marshal(document, file);
-            currentFile = file;
-        } catch (DataBindingException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
     }
 
-    private void updateSelectBoxes() {
-        blockModeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedBlockModi() : new ArrayList<BlockMode>());
-        paddingSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedPaddings() : new ArrayList<Padding>());
+    void saveAs() {
+
     }
 
-    /**
-     * save the current file
-     *
-     * @return {@code true} if a file has been saved, otherwise {@code false}
-     */
-    private boolean save() {
-        if (currentFile == null) {
-            return this.saveAs();
-        }
+    void open() {
 
-        byte[] data = text.getText().getBytes();
-        Document document = new Document(new Date(), chipherSelection.getValue(), data);
-
-        try {
-            JAXB.marshal(document, currentFile);
-        } catch (DataBindingException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
     }
 
-    /**
-     * load a file via FileChooser
-     *
-     * @return {@code true} if a file has been loaded, otherwise {@code false}
-     */
-    private boolean load() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Load file");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*"));
-        fileChooser.setInitialDirectory(currentFile != null ? currentFile.getParentFile() : new File(System.getProperty("user.home")));
-        File file = fileChooser.showOpenDialog(new Stage());
-        if (file == null) return false;
-        try {
-            Document document = JAXB.unmarshal(file, Document.class);
-            byte[] data = document.getPayload();
-            chipherSelection.setValue(document.getCipherName());
-            text.setText(new String(data));
-        } catch (DataBindingException e) {
-            e.printStackTrace();
-            return false;
-        }
-        currentFile = file;
-        return true;
-    }
-
-    /**
-     * quit application
-     */
-    private void quit() {
-        Platform.exit();
-        System.exit(0);
+    void quit() {
     }
 }

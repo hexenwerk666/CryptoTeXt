@@ -1,6 +1,7 @@
 package de.hsduesseldorf.medien.securesystems.editor.app;
 
 import de.hsduesseldorf.medien.securesystems.editor.controller.EditorController;
+import de.hsduesseldorf.medien.securesystems.editor.controller.OptionsDialogController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -48,6 +49,8 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/optionsDialog.fxml"));
             VBox element = (VBox) loader.load();
+            OptionsDialogController optionsDialogController = loader.getController();
+            optionsDialogController.setMainApp(this);
             optionsDialog = new Stage();
             optionsDialog.initModality(Modality.APPLICATION_MODAL);
             optionsDialog.setScene(new Scene(element));

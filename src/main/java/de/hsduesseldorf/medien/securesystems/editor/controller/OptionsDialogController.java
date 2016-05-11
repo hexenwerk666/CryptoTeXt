@@ -18,6 +18,8 @@ public class OptionsDialogController implements Initializable {
 
     MainApp mainApp;
     EditorController editorController;
+    Options selectedOptions;
+
 
     @FXML
     ComboBox<CipherName> chipherSelection;
@@ -48,13 +50,16 @@ public class OptionsDialogController implements Initializable {
     }
 
     public void submit() {
-        Options options = new Options(chipherSelection.getValue(), blockModeSelection.getValue(), paddingSelection.getValue());
-        this.editorController.setSelectedOptions(options);
+        this.selectedOptions = new Options(chipherSelection.getValue(), blockModeSelection.getValue(), paddingSelection.getValue());
         mainApp.getOptionsDialog().hide();
     }
 
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
+    }
+
+    public Options getSelectedOptions() {
+        return selectedOptions;
     }
 }

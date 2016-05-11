@@ -40,4 +40,13 @@ public class Options {
     public void setPadding(Padding padding) {
         this.padding = padding;
     }
+
+    @Override
+    public String toString() {
+        return "Options{" +
+                "cipherName=" + cipherName +
+                ", blockMode=" + blockMode +
+                ", padding=" + padding +
+                '}';
+    }
 }

@@ -1,7 +1,6 @@
 package de.hsduesseldorf.medien.securesystems.editor.controller;
 
 import de.hsduesseldorf.medien.securesystems.editor.app.MainApp;
-import de.hsduesseldorf.medien.securesystems.editor.model.Options;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
@@ -13,8 +12,6 @@ public class EditorController implements Initializable {
 
     MainApp mainApp;
     OptionsDialogController optionsDialogController;
-
-    Options selectedOptions;
 
 
     @FXML
@@ -46,16 +43,14 @@ public class EditorController implements Initializable {
         this.mainApp = mainApp;
     }
 
-    public void setSelectedOptions(Options selectedOptions) {
-        this.selectedOptions = selectedOptions;
-    }
-
     void save() {
-        mainApp.getOptionsDialog().show();
+        mainApp.getOptionsDialog().showAndWait();
+        System.out.println(optionsDialogController.getSelectedOptions());
     }
 
     void saveAs() {
-        mainApp.getOptionsDialog().show();
+        mainApp.getOptionsDialog().showAndWait();
+        System.out.println(optionsDialogController.getSelectedOptions());
     }
 
     void open() {

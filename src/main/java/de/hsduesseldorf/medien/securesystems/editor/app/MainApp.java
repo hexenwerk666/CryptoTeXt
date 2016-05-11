@@ -36,7 +36,7 @@ public class MainApp extends Application {
     public void initRootLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/editor.fxml"));
+            loader.setLocation(getClass().getResource("/views/editor.fxml"));
             AnchorPane element = loader.load();
             this.editorController = loader.getController();
             Scene root = new Scene(element);
@@ -50,7 +50,7 @@ public class MainApp extends Application {
     public void initOptionsDialog() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/optionsDialog.fxml"));
+            loader.setLocation(getClass().getResource("/views/optionsDialog.fxml"));
             VBox element = (VBox) loader.load();
             this.optionsDialogController = loader.getController();
             this.optionsDialog = new Stage();

@@ -57,4 +57,8 @@ public class OptionsDialogController implements Initializable {
     public Options getSelectedOptions() {
         return selectedOptions;
     }
+
+    public void setSelectedOptions(Options selectedOptions) {
+        this.selectedOptions = selectedOptions;
+    }
 }

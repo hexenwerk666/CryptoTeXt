@@ -5,6 +5,8 @@ import de.hsduesseldorf.medien.securesystems.editor.model.properties.CipherName;
 import de.hsduesseldorf.medien.securesystems.editor.model.properties.Padding;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -25,8 +27,10 @@ public class Document {
 
     private byte[] payload;
 
+    private File file;
 
-    public Document(Date lastModified, CipherName cipherName, BlockMode blockMode, Padding padding, Integer blockSize, Integer payloadLength, byte[] payload) {
+
+    public Document(Date lastModified, CipherName cipherName, BlockMode blockMode, Padding padding, Integer blockSize, Integer payloadLength, byte[] payload, File file) {
         this.lastModified = lastModified;
         this.cipherName = cipherName;
         this.blockMode = blockMode;
@@ -34,9 +38,10 @@ public class Document {
         this.blockSize = blockSize;
         this.payloadLength = payloadLength;
         this.payload = payload;
+        this.file = file;
     }
 
-    public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] payload) {
+    public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] payload, File file) {
         this.lastModified = lastModified;
         this.cipherName = options.cipherName;
         this.blockMode = options.blockMode;
@@ -44,6 +49,7 @@ public class Document {
         this.blockSize = blockSize;
         this.payloadLength = payloadLength;
         this.payload = payload;
+        this.file = file;
     }
 
     public Document() {
@@ -104,6 +110,25 @@ public class Document {
 
     public void setPayload(byte[] payload) {
         this.payload = payload;
+    }
+
+    @XmlTransient
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    public Options getOptions() {
+        return new Options(this.cipherName, this.blockMode, this.padding);
+    }
+
+    public void setOptions(Options options) {
+        this.cipherName = options.getCipherName();
+        this.blockMode = options.getBlockMode();
+        this.padding = options.getPadding();
     }
 
     @Override

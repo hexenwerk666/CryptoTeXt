@@ -115,7 +115,7 @@ public class EditorController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load file");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*"));
-        fileChooser.setInitialDirectory(currentDocument.getFile() != null ? currentDocument.getFile().getParentFile() : new File(System.getProperty("user.home")));
+        fileChooser.setInitialDirectory(currentDocument != null ? currentDocument.getFile().getParentFile() : new File(System.getProperty("user.home")));
         File file = fileChooser.showOpenDialog(new Stage());
         if (file == null) return false;
         try {

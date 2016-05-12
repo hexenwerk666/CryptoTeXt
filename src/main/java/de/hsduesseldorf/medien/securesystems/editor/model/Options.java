@@ -16,6 +16,10 @@ public class Options {
         this.padding = padding;
     }
 
+    public Options() {
+        // default
+    }
+
 
     public CipherName getCipherName() {
         return cipherName;

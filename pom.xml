@@ -19,15 +19,20 @@
         <junit.version>4.12</junit.version>
         <mockito-all.version>1.10.19</mockito-all.version>
         <powermock-core.version>1.6.4</powermock-core.version>
-        <javafx-maven-plugin.version>8.4.0</javafx-maven-plugin.version>
         <commons-lang3.version>3.4</commons-lang3.version>
+        <!-- maven plugins -->
+        <javafx-maven-plugin.version>8.4.0</javafx-maven-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
     </properties>
 
     <build>
+
+        <defaultGoal>clean jfx:run</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>

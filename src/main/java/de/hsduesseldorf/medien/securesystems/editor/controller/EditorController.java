@@ -46,10 +46,10 @@ public class EditorController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        menuFileOpen.setOnAction(e -> open());
-        menuFileSave.setOnAction(e -> save());
-        menuFileSaveAs.setOnAction(e -> saveAs());
-        menuFileQuit.setOnAction(e -> quit());
+        menuFileOpen.setOnAction(evt -> open());
+        menuFileSave.setOnAction(evt -> save());
+        menuFileSaveAs.setOnAction(evt -> saveAs());
+        menuFileQuit.setOnAction(evt -> quit());
     }
 
     public void setOptionsDialogController(OptionsDialogController optionsDialogController) {

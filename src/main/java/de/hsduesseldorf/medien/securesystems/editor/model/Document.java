@@ -25,31 +25,27 @@ public class Document {
 
     private Integer payloadLength;
 
+    private byte[] salt;
+
     private byte[] payload;
 
     private File file;
 
 
-    public Document(Date lastModified, CipherName cipherName, BlockMode blockMode, Padding padding, Integer blockSize, Integer payloadLength, byte[] payload, File file) {
+    public Document(Date lastModified, CipherName cipherName, BlockMode blockMode, Padding padding, Integer blockSize, Integer payloadLength, byte[] salt, byte[] payload, File file) {
         this.lastModified = lastModified;
         this.cipherName = cipherName;
         this.blockMode = blockMode;
         this.padding = padding;
         this.blockSize = blockSize;
         this.payloadLength = payloadLength;
+        this.salt = salt;
         this.payload = payload;
         this.file = file;
     }
 
-    public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] payload, File file) {
-        this.lastModified = lastModified;
-        this.cipherName = options.cipherName;
-        this.blockMode = options.blockMode;
-        this.padding = options.padding;
-        this.blockSize = blockSize;
-        this.payloadLength = payloadLength;
-        this.payload = payload;
-        this.file = file;
+    public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] salt, byte[] payload, File file) {
+        this(lastModified, options.cipherName, options.blockMode, options.padding, blockSize, payloadLength, salt, payload, file);
     }
 
     public Document() {
@@ -102,6 +98,14 @@ public class Document {
 
     public void setPayloadLength(Integer payloadLength) {
         this.payloadLength = payloadLength;
+    }
+
+    public byte[] getSalt() {
+        return salt;
+    }
+
+    public void setSalt(byte[] salt) {
+        this.salt = salt;
     }
 
     public byte[] getPayload() {

@@ -13,6 +13,8 @@ import java.util.Date;
 @XmlRootElement
 public class Document {
 
+    private static final byte[] DEFAULT_SALT = "salt".getBytes();
+
     private Date lastModified;
 
     private CipherName cipherName;
@@ -46,6 +48,10 @@ public class Document {
 
     public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] salt, byte[] payload, File file) {
         this(lastModified, options.cipherName, options.blockMode, options.padding, blockSize, payloadLength, salt, payload, file);
+    }
+
+    public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] payload, File file) {
+        this(lastModified, options.cipherName, options.blockMode, options.padding, blockSize, payloadLength, DEFAULT_SALT, payload, file);
     }
 
     public Document() {

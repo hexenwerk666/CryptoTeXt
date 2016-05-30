@@ -40,13 +40,13 @@ public class Document {
 
     public Document(Date lastModified, Options options, Integer payloadLength, byte[] salt, byte[] payload, File file) {
         this(lastModified, options, payloadLength, salt, null, payload, file);
-        this.iv = new byte[options.blockSize];
+        this.iv = new byte[options.keySize];
         new SecureRandom().nextBytes(iv);
     }
 
     public Document(Date lastModified, Options options, Integer payloadLength, byte[] payload, File file) {
         this(lastModified, options, payloadLength, DEFAULT_SALT, null, payload, file);
-        this.iv = new byte[options.blockSize];
+        this.iv = new byte[options.keySize];
         new SecureRandom().nextBytes(iv);
     }
 

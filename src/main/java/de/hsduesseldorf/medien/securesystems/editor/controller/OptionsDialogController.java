@@ -45,7 +45,7 @@ public class OptionsDialogController implements Initializable {
     private void updateSelectBoxes() {
         blockModeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedBlockModi() : new ArrayList<BlockMode>());
         paddingSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedPaddings() : new ArrayList<Padding>());
-        blockSizeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedBlockSizes() : new ArrayList<Integer>());
+        blockSizeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedKeySizes() : new ArrayList<Integer>());
     }
 
     public void submit() {

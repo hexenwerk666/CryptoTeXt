@@ -10,17 +10,18 @@ import java.util.List;
 public enum CipherName {
 
     Plaintext(new BlockMode[0], new Padding[0], new Integer[0]),
-    AES(BlockMode.values(), Padding.values(), new Integer[]{128, 256}),
-    DES(BlockMode.values(), Padding.values(), new Integer[]{64});
+    //AES(BlockMode.values(), Padding.values(), new Integer[]{128, 192, 256}),
+    DES(BlockMode.values(), Padding.values(), new Integer[]{64}),
+    ARC4(new BlockMode[0], new Padding[0], new Integer[]{128});
 
     List<BlockMode> providedBlockModi;
     List<Padding> providedPaddings;
-    List<Integer> providedBlockSizes;
+    List<Integer> providedKeySizes;
 
-    CipherName(BlockMode[] blockModi, Padding[] paddings, Integer[] providedBlockSizes) {
+    CipherName(BlockMode[] blockModi, Padding[] paddings, Integer[] providedKeySizes) {
         this.providedBlockModi = Arrays.asList(blockModi);
         this.providedPaddings = Arrays.asList(paddings);
-        this.providedBlockSizes = Arrays.asList(providedBlockSizes);
+        this.providedKeySizes = Arrays.asList(providedKeySizes);
     }
 
     public List<BlockMode> getProvidedBlockModi() {
@@ -31,7 +32,7 @@ public enum CipherName {
         return providedPaddings;
     }
 
-    public List<Integer> getProvidedBlockSizes() {
-        return providedBlockSizes;
+    public List<Integer> getProvidedKeySizes() {
+        return providedKeySizes;
     }
 }

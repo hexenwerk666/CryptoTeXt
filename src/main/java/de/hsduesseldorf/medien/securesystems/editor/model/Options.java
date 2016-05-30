@@ -7,15 +7,15 @@ import de.hsduesseldorf.medien.securesystems.editor.model.properties.Padding;
 public class Options {
 
     CipherName cipherName;
-    Integer blockSize;
+    Integer keySize;
     BlockMode blockMode;
     Padding padding;
 
-    public Options(CipherName cipherName, BlockMode blockMode, Padding padding, Integer blockSize) {
+    public Options(CipherName cipherName, BlockMode blockMode, Padding padding, Integer keySize) {
         this.cipherName = cipherName;
         this.blockMode = blockMode;
         this.padding = padding;
-        this.blockSize = blockSize;
+        this.keySize = keySize;
     }
 
     public Options() {
@@ -31,12 +31,12 @@ public class Options {
         this.cipherName = cipherName;
     }
 
-    public Integer getBlockSize() {
-        return blockSize;
+    public Integer getKeySize() {
+        return keySize;
     }
 
-    public void setBlockSize(Integer blockSize) {
-        this.blockSize = blockSize;
+    public void setKeySize(Integer keySize) {
+        this.keySize = keySize;
     }
 
     public BlockMode getBlockMode() {
@@ -59,8 +59,32 @@ public class Options {
     public String toString() {
         return "Options{" +
                 "cipherName=" + cipherName +
+                ", keySize=" + keySize +
                 ", blockMode=" + blockMode +
                 ", padding=" + padding +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Options options = (Options) o;
+
+        if (cipherName != options.cipherName) return false;
+        if (keySize != null ? !keySize.equals(options.keySize) : options.keySize != null) return false;
+        if (blockMode != options.blockMode) return false;
+        return padding == options.padding;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = cipherName != null ? cipherName.hashCode() : 0;
+        result = 31 * result + (keySize != null ? keySize.hashCode() : 0);
+        result = 31 * result + (blockMode != null ? blockMode.hashCode() : 0);
+        result = 31 * result + (padding != null ? padding.hashCode() : 0);
+        return result;
     }
 }

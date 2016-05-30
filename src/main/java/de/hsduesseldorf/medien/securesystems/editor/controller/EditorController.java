@@ -67,7 +67,7 @@ public class EditorController implements Initializable {
             return this.saveAs();
         }
 
-        optionsDialogController.setSelectedOptions(new Options(currentDocument.getOptions().getCipherName(), currentDocument.getOptions().getBlockMode(), currentDocument.getOptions().getPadding(), currentDocument.getOptions().getBlockSize()));
+        optionsDialogController.setSelectedOptions(new Options(currentDocument.getOptions().getCipherName(), currentDocument.getOptions().getBlockMode(), currentDocument.getOptions().getPadding(), currentDocument.getOptions().getKeySize()));
         mainApp.getOptionsDialog().showAndWait();
 
         byte[] data = text.getText().getBytes();

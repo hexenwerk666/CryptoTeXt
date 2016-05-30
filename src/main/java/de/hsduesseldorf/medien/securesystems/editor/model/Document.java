@@ -7,6 +7,7 @@ import de.hsduesseldorf.medien.securesystems.editor.model.properties.Padding;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.File;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -29,12 +30,14 @@ public class Document {
 
     private byte[] salt;
 
+    private byte[] iv;
+
     private byte[] payload;
 
     private File file;
 
 
-    public Document(Date lastModified, CipherName cipherName, BlockMode blockMode, Padding padding, Integer blockSize, Integer payloadLength, byte[] salt, byte[] payload, File file) {
+    public Document(Date lastModified, CipherName cipherName, BlockMode blockMode, Padding padding, Integer blockSize, Integer payloadLength, byte[] salt, byte[] iv, byte[] payload, File file) {
         this.lastModified = lastModified;
         this.cipherName = cipherName;
         this.blockMode = blockMode;
@@ -47,11 +50,15 @@ public class Document {
     }
 
     public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] salt, byte[] payload, File file) {
-        this(lastModified, options.cipherName, options.blockMode, options.padding, blockSize, payloadLength, salt, payload, file);
+        this(lastModified, options.cipherName, options.blockMode, options.padding, blockSize, payloadLength, salt, null, payload, file);
+        this.iv = new byte[blockSize];
+        new SecureRandom().nextBytes(iv);
     }
 
     public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] payload, File file) {
-        this(lastModified, options.cipherName, options.blockMode, options.padding, blockSize, payloadLength, DEFAULT_SALT, payload, file);
+        this(lastModified, options.cipherName, options.blockMode, options.padding, blockSize, payloadLength, DEFAULT_SALT, null, payload, file);
+        this.iv = new byte[blockSize];
+        new SecureRandom().nextBytes(iv);
     }
 
     public Document() {
@@ -112,6 +119,14 @@ public class Document {
 
     public void setSalt(byte[] salt) {
         this.salt = salt;
+    }
+
+    public byte[] getIv() {
+        return iv;
+    }
+
+    public void setIv(byte[] iv) {
+        this.iv = iv;
     }
 
     public byte[] getPayload() {

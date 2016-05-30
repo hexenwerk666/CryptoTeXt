@@ -26,6 +26,7 @@ public class EditorController implements Initializable {
     MainApp mainApp;
     OptionsDialogController optionsDialogController;
     Document currentDocument;
+    boolean abort;
 
 
     @FXML
@@ -66,11 +67,11 @@ public class EditorController implements Initializable {
             return this.saveAs();
         }
 
-        optionsDialogController.setSelectedOptions(new Options(currentDocument.getCipherName(), currentDocument.getBlockMode(), currentDocument.getPadding()));
+        optionsDialogController.setSelectedOptions(new Options(currentDocument.getOptions().getCipherName(), currentDocument.getOptions().getBlockMode(), currentDocument.getOptions().getPadding(), currentDocument.getOptions().getBlockSize()));
         mainApp.getOptionsDialog().showAndWait();
 
         byte[] data = text.getText().getBytes();
-        Document document = new Document(new Date(), optionsDialogController.getSelectedOptions(), 256, data.length, data, currentDocument.getFile());
+        Document document = new Document(new Date(), optionsDialogController.getSelectedOptions(), data.length, data, currentDocument.getFile());
 
         try {
             JAXB.marshal(document, currentDocument.getFile());
@@ -83,7 +84,17 @@ public class EditorController implements Initializable {
 
     boolean saveAs() {
         LOG.debug("Save as..");
-        mainApp.getOptionsDialog().showAndWait();
+        this.abort = false;
+        Stage optionsDialog = mainApp.getOptionsDialog();
+
+        optionsDialog.setOnCloseRequest(evt -> {
+            this.abort = true;
+        });
+
+        optionsDialog.showAndWait();
+
+        if (abort) return false;
+
         FileChooser fileChooser = new FileChooser();
         if (currentDocument != null) {
             fileChooser.setInitialDirectory(currentDocument.getFile().getParentFile());
@@ -97,7 +108,7 @@ public class EditorController implements Initializable {
         if (file == null) return false;
 
         byte[] data = text.getText().getBytes();
-        Document document = new Document(new Date(), optionsDialogController.getSelectedOptions(), 256, data.length, data, file);
+        Document document = new Document(new Date(), optionsDialogController.getSelectedOptions(), data.length, data, file);
 
         try {
             JAXB.marshal(document, file);

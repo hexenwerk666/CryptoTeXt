@@ -1,14 +1,9 @@
 package de.hsduesseldorf.medien.securesystems.editor.model;
 
-import de.hsduesseldorf.medien.securesystems.editor.model.properties.BlockMode;
-import de.hsduesseldorf.medien.securesystems.editor.model.properties.CipherName;
-import de.hsduesseldorf.medien.securesystems.editor.model.properties.Padding;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.File;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Date;
 
 @XmlRootElement
@@ -18,13 +13,7 @@ public class Document {
 
     private Date lastModified;
 
-    private CipherName cipherName;
-
-    private BlockMode blockMode;
-
-    private Padding padding;
-
-    private Integer blockSize;
+    private Options options;
 
     private Integer payloadLength;
 
@@ -37,27 +26,25 @@ public class Document {
     private File file;
 
 
-    public Document(Date lastModified, CipherName cipherName, BlockMode blockMode, Padding padding, Integer blockSize, Integer payloadLength, byte[] salt, byte[] iv, byte[] payload, File file) {
+    public Document(Date lastModified, Options options, Integer payloadLength, byte[] salt, byte[] iv, byte[] payload, File file) {
         this.lastModified = lastModified;
-        this.cipherName = cipherName;
-        this.blockMode = blockMode;
-        this.padding = padding;
-        this.blockSize = blockSize;
+        this.options = options;
         this.payloadLength = payloadLength;
         this.salt = salt;
+        this.iv = iv;
         this.payload = payload;
         this.file = file;
     }
 
-    public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] salt, byte[] payload, File file) {
-        this(lastModified, options.cipherName, options.blockMode, options.padding, blockSize, payloadLength, salt, null, payload, file);
-        this.iv = new byte[blockSize];
+    public Document(Date lastModified, Options options, Integer payloadLength, byte[] salt, byte[] payload, File file) {
+        this(lastModified, options, payloadLength, salt, null, payload, file);
+        this.iv = new byte[options.blockSize];
         new SecureRandom().nextBytes(iv);
     }
 
-    public Document(Date lastModified, Options options, Integer blockSize, Integer payloadLength, byte[] payload, File file) {
-        this(lastModified, options.cipherName, options.blockMode, options.padding, blockSize, payloadLength, DEFAULT_SALT, null, payload, file);
-        this.iv = new byte[blockSize];
+    public Document(Date lastModified, Options options, Integer payloadLength, byte[] payload, File file) {
+        this(lastModified, options, payloadLength, DEFAULT_SALT, null, payload, file);
+        this.iv = new byte[options.blockSize];
         new SecureRandom().nextBytes(iv);
     }
 
@@ -71,38 +58,6 @@ public class Document {
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
-    }
-
-    public CipherName getCipherName() {
-        return cipherName;
-    }
-
-    public void setCipherName(CipherName cipherName) {
-        this.cipherName = cipherName;
-    }
-
-    public BlockMode getBlockMode() {
-        return blockMode;
-    }
-
-    public void setBlockMode(BlockMode blockMode) {
-        this.blockMode = blockMode;
-    }
-
-    public Padding getPadding() {
-        return padding;
-    }
-
-    public void setPadding(Padding padding) {
-        this.padding = padding;
-    }
-
-    public Integer getBlockSize() {
-        return blockSize;
-    }
-
-    public void setBlockSize(Integer blockSize) {
-        this.blockSize = blockSize;
     }
 
     public Integer getPayloadLength() {
@@ -147,34 +102,12 @@ public class Document {
     }
 
     public Options getOptions() {
-        return new Options(this.cipherName, this.blockMode, this.padding);
+        return this.options;
     }
 
     public void setOptions(Options options) {
-        this.cipherName = options.getCipherName();
-        this.blockMode = options.getBlockMode();
-        this.padding = options.getPadding();
+        this.options = options;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        Document document = (Document) o;
-
-        if (lastModified != null ? !lastModified.equals(document.lastModified) : document.lastModified != null)
-            return false;
-        if (cipherName != document.cipherName) return false;
-        return Arrays.equals(payload, document.payload);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = lastModified != null ? lastModified.hashCode() : 0;
-        result = 31 * result + (cipherName != null ? cipherName.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(payload);
-        return result;
-    }
 }

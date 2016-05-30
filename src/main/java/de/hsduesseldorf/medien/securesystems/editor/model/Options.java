@@ -7,13 +7,15 @@ import de.hsduesseldorf.medien.securesystems.editor.model.properties.Padding;
 public class Options {
 
     CipherName cipherName;
+    Integer blockSize;
     BlockMode blockMode;
     Padding padding;
 
-    public Options(CipherName cipherName, BlockMode blockMode, Padding padding) {
+    public Options(CipherName cipherName, BlockMode blockMode, Padding padding, Integer blockSize) {
         this.cipherName = cipherName;
         this.blockMode = blockMode;
         this.padding = padding;
+        this.blockSize = blockSize;
     }
 
     public Options() {
@@ -27,6 +29,14 @@ public class Options {
 
     public void setCipherName(CipherName cipherName) {
         this.cipherName = cipherName;
+    }
+
+    public Integer getBlockSize() {
+        return blockSize;
+    }
+
+    public void setBlockSize(Integer blockSize) {
+        this.blockSize = blockSize;
     }
 
     public BlockMode getBlockMode() {

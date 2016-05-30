@@ -24,6 +24,9 @@ public class OptionsDialogController implements Initializable {
     ComboBox<CipherName> chipherSelection;
 
     @FXML
+    ComboBox<Integer> blockSizeSelection;
+
+    @FXML
     ComboBox<BlockMode> blockModeSelection;
 
     @FXML
@@ -42,10 +45,11 @@ public class OptionsDialogController implements Initializable {
     private void updateSelectBoxes() {
         blockModeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedBlockModi() : new ArrayList<BlockMode>());
         paddingSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedPaddings() : new ArrayList<Padding>());
+        blockSizeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedBlockSizes() : new ArrayList<Integer>());
     }
 
     public void submit() {
-        this.selectedOptions = new Options(chipherSelection.getValue(), blockModeSelection.getValue(), paddingSelection.getValue());
+        this.selectedOptions = new Options(chipherSelection.getValue(), blockModeSelection.getValue(), paddingSelection.getValue(), blockSizeSelection.getValue());
         mainApp.getOptionsDialog().hide();
     }
 

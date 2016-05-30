@@ -23,6 +23,8 @@ public class Document {
 
     private byte[] payload;
 
+    private Boolean isEncrypted;
+
     private File file;
 
 
@@ -109,5 +111,11 @@ public class Document {
         this.options = options;
     }
 
+    public Boolean getEncrypted() {
+        return isEncrypted;
+    }
 
+    public void setEncrypted(Boolean encrypted) {
+        isEncrypted = encrypted;
+    }
 }

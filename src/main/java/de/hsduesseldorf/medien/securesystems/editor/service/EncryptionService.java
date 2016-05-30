@@ -8,8 +8,6 @@ import java.security.spec.KeySpec;
 
 public class EncryptionService {
 
-    static final KeySpec KEY = null;
-
     DocumentEncryptor encryptor;
 
     public EncryptionService(DocumentEncryptor encryptor) {

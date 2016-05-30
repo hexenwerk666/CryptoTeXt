@@ -4,10 +4,12 @@ package de.hsduesseldorf.medien.securesystems.editor.service.encryptor;
 import de.hsduesseldorf.medien.securesystems.editor.model.Document;
 import de.hsduesseldorf.medien.securesystems.editor.model.Options;
 
-public class SymmetricDocumentEncryptor extends DocumentEncryptor{
+public class DESDocumentEncryptor implements DocumentEncryptor {
 
-    public SymmetricDocumentEncryptor(Options options) {
-        super(options);
+    private Options options;
+
+    public DESDocumentEncryptor(Options options) {
+        this.options = options;
     }
 
     @Override

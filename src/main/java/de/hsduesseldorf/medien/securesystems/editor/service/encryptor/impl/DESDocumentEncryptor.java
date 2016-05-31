@@ -2,6 +2,7 @@ package de.hsduesseldorf.medien.securesystems.editor.service.encryptor.impl;
 
 
 import de.hsduesseldorf.medien.securesystems.editor.model.Document;
+import de.hsduesseldorf.medien.securesystems.editor.model.Options;
 import de.hsduesseldorf.medien.securesystems.editor.service.encryptor.DocumentEncryptor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
@@ -21,56 +22,48 @@ public class DESDocumentEncryptor implements DocumentEncryptor {
 
     byte[] keyBytes = new byte[]{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
 
+    Options options;
 
-    @Override
-    public Document encrypt(Document document) throws GeneralSecurityException {
-        Security.addProvider(new BouncyCastleProvider());
-        String optionsParam = document.getOptions().getCipherName() + "/" + document.getOptions().getBlockMode() + "/" + document.getOptions().getPadding();
-        SecretKeySpec key = new SecretKeySpec(keyBytes, document.getOptions().getCipherName().name());
-
-        byte[] input = Arrays.copyOf(document.getPayload(), document.getPayload().length);
-
-        Cipher cipher = Cipher.getInstance(optionsParam, "BC");
-
-        LOG.debug("input : " + Hex.toHexString(input));
-
-        // encryption pass
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] cipherText = new byte[cipher.getOutputSize(input.length)];
-        int ctLength = cipher.update(input, 0, input.length, cipherText, 0);
-        ctLength += cipher.doFinal(cipherText, ctLength);
-
-        LOG.debug("cipher: " + Hex.toHexString(cipherText) + " bytes: " + ctLength);
-
-        document.setEncrypted(true);
-        document.setPayload(cipherText);
-        return document;
+    public DESDocumentEncryptor(Options options) {
+        this.options = options;
     }
 
     @Override
-    public Document decrypt(Document document) throws GeneralSecurityException {
+    public byte[] encrypt(byte[] input) throws GeneralSecurityException {
         Security.addProvider(new BouncyCastleProvider());
-        String optionsParam = document.getOptions().getCipherName() + "/" + document.getOptions().getBlockMode() + "/" + document.getOptions().getPadding();
-        SecretKeySpec key = new SecretKeySpec(keyBytes, document.getOptions().getCipherName().name());
+        String optionsParam = options.getCipherName() + "/" + options.getBlockMode() + "/" + options.getPadding();
+        SecretKeySpec key = new SecretKeySpec(keyBytes, options.getCipherName().name());
+        Cipher cipher = Cipher.getInstance(optionsParam, "BC");
+        LOG.debug("input : " + Hex.toHexString(input));
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte[] output = new byte[cipher.getOutputSize(input.length)];
+        int ctLength = cipher.update(input, 0, input.length, output, 0);
+        ctLength += cipher.doFinal(output, ctLength);
+        LOG.debug("cipher: " + Hex.toHexString(output) + " bytes: " + ctLength);
+        return output;
+    }
 
-        byte[] cipherText = Arrays.copyOf(document.getPayload(), document.getPayload().length);
+    @Override
+    public byte[] decrypt(byte[] input, int lenght) throws GeneralSecurityException {
+        Security.addProvider(new BouncyCastleProvider());
+        String optionsParam = options.getCipherName() + "/" + options.getBlockMode() + "/" + options.getPadding();
+        SecretKeySpec key = new SecretKeySpec(keyBytes, options.getCipherName().name());
 
-        int ctLength = cipherText.length;
+
+        int ctLength = input.length;
 
         Cipher cipher = Cipher.getInstance(optionsParam, "BC");
 
         cipher.init(Cipher.DECRYPT_MODE, key);
 
-        byte[] plainText = new byte[cipher.getOutputSize(ctLength)];
+        byte[] output = new byte[cipher.getOutputSize(ctLength)];
 
-        int ptLength = cipher.update(cipherText, 0, ctLength, plainText, 0);
-        LOG.debug("cipher "+Hex.toHexString(cipherText));
-        ptLength += cipher.doFinal(plainText, ptLength);
-        LOG.debug("decypted "+Hex.toHexString(plainText));
-        plainText = Arrays.copyOf(plainText,document.getPayloadLength());
-        LOG.debug("remove padding "+Hex.toHexString(plainText));
-        document.setPayload(plainText);
-        document.setEncrypted(false);
-        return document;
+        int ptLength = cipher.update(input, 0, ctLength, output, 0);
+        LOG.debug("cipher " + Hex.toHexString(input));
+        cipher.doFinal(output, ptLength);
+        LOG.debug("decypted " + Hex.toHexString(output));
+        output = Arrays.copyOf(output, lenght);
+        LOG.debug("remove padding " + Hex.toHexString(output));
+        return output;
     }
 }

@@ -17,10 +17,10 @@ public class EncryptionService {
 
 
     public Document encrypt(Document document) throws GeneralSecurityException {
-        return encryptor.encrypt(document);
+        return null;
     }
 
     public Document decrypt(Document document) throws GeneralSecurityException {
-        return encryptor.decrypt(document);
+        return null;
     }
 }

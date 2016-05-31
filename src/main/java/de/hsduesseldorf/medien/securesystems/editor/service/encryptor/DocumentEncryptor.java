@@ -13,7 +13,11 @@ import java.security.NoSuchProviderException;
 
 public interface DocumentEncryptor {
 
-    public abstract Document encrypt(Document document) throws GeneralSecurityException;
+    public abstract byte[] encrypt(byte[] input) throws GeneralSecurityException;
 
-    public abstract Document decrypt(Document document) throws GeneralSecurityException;
+    public abstract byte[] decrypt(byte[] input, int lenght) throws GeneralSecurityException;
+
+    default byte[] decrypt(byte[] input) throws GeneralSecurityException {
+        return this.decrypt(input,input.length);
+    }
 }

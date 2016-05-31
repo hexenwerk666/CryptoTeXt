@@ -23,37 +23,34 @@ public class DESDocumentEncryptorTest {
             0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
 
     DESDocumentEncryptor cut;
-    Options options = new Options(CipherName.DES, BlockMode.ECB, Padding.PKCS7PADDING, 64);
-
+    Document document;
 
 
     @Before
     public void setup() throws Exception {
+        Options options = new Options(CipherName.DES, BlockMode.ECB, Padding.PKCS7PADDING, 64);
         this.cut = new DESDocumentEncryptor();
+        document = new Document();
+        document.setOptions(options);
+        document.setEncrypted(false);
+        document.setPayload(TEST_MESSAGE);
+        document.setPayloadLength(TEST_MESSAGE.length);
     }
 
     @Test
     public void encrypt() throws Exception {
-        Document document = new Document();
-        document.setOptions(options);
-        document.setEncrypted(false);
-        document.setPayloadLength(TEST_MESSAGE.length);
-        document.setPayload(TEST_MESSAGE);
         Document actual = cut.encrypt(document);
         LOG.debug(Hex.toHexString(document.getPayload()));
+        assertTrue(actual.getEncrypted());
         assertNotEquals(TEST_MESSAGE,actual.getPayload());
     }
 
     @Test
     public void decrypt() throws Exception {
-        Document document = new Document();
-        document.setOptions(options);
-        document.setEncrypted(false);
-        document.setPayload(TEST_MESSAGE);
-        document.setPayloadLength(TEST_MESSAGE.length);
         Document actual = cut.encrypt(document);
         actual = cut.decrypt(actual);
         assertArrayEquals(TEST_MESSAGE,actual.getPayload());
+        assertFalse(actual.getEncrypted());
     }
 
 }

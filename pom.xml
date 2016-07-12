@@ -23,6 +23,7 @@
         <!-- maven plugins -->
         <javafx-maven-plugin.version>8.4.0</javafx-maven-plugin.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+        <jasypt.version>1.9.2</jasypt.version>
     </properties>
 
     <build>
@@ -57,6 +58,13 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
             <version>${bcprov-jdk15on.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt</artifactId>
+            <version>${jasypt.version}</version>
             <scope>compile</scope>
         </dependency>
 

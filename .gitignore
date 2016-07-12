@@ -79,3 +79,6 @@ fabric.properties
 .Trash-*
 
 # Created by .ignore support plugin (hsz.mobi)
+.idea/
+.project
+editor.iml

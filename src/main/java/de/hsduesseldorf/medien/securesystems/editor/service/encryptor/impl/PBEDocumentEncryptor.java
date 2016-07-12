@@ -30,7 +30,7 @@ public class PBEDocumentEncryptor implements DocumentEncryptor {
     String pbeMethod;
     boolean streamMode;
 
-    public PBEDocumentEncryptor(char[] password, int keySize, String cipherName, String pbeMethod, boolean streamMode) throws Exception {
+    public PBEDocumentEncryptor(char[] password, int keySize, String cipherName, String pbeMethod, boolean streamMode) {
         this.password = password;
         this.keySize = keySize;
         this.cipherName = cipherName;

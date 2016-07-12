@@ -13,7 +13,7 @@ public class DocumentEncryptorFactory {
             case "ARC4":
                 return new PBEDocumentEncryptor(password, 128, "ARC4", "PBEWithSHAAnd128BitRC4", true);
             default:
-                return null;
+                throw new IllegalArgumentException("The cipher type <" + type + "> is not supported.");
         }
     }
 

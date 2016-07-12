@@ -20,21 +20,27 @@ import java.security.Security;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
 
-@Deprecated
-public class AESDocumentEncryptorWithPBE implements DocumentEncryptor {
+public class PBEDocumentEncryptor implements DocumentEncryptor {
 
-    static final int IT_COUNT = 65536;
-    static final int KEY_SIZE = 256;
-    private static Logger LOG = LoggerFactory.getLogger(AESDocumentEncryptorWithPBE.class);
+    static int iterCount = 65536;
+    static Logger LOG = LoggerFactory.getLogger(PBEDocumentEncryptor.class);
     char[] password;
+    int keySize;
+    String cipherName;
+    String pbeMethod;
+    boolean streamMode;
 
-    public AESDocumentEncryptorWithPBE(char[] password) throws Exception {
+    public PBEDocumentEncryptor(char[] password, int keySize, String cipherName, String pbeMethod, boolean streamMode) throws Exception {
         this.password = password;
+        this.keySize = keySize;
+        this.cipherName = cipherName;
+        this.pbeMethod = pbeMethod;
+        this.streamMode = streamMode;
     }
 
     SecretKey generateSecret(byte[] salt) throws GeneralSecurityException {
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBEWithSHA256And256BitAES-CBC-BC");
-        KeySpec spec = new PBEKeySpec(this.password, salt, IT_COUNT, KEY_SIZE);
+        SecretKeyFactory factory = SecretKeyFactory.getInstance(pbeMethod,"BC");
+        KeySpec spec = new PBEKeySpec(this.password, salt, iterCount, keySize);
         SecretKey secret = factory.generateSecret(spec);
         return secret;
     }
@@ -46,11 +52,13 @@ public class AESDocumentEncryptorWithPBE implements DocumentEncryptor {
         new SecureRandom().nextBytes(salt);
         document.setSalt(salt);
         SecretKey secret = generateSecret(salt);
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
+        Cipher cipher = Cipher.getInstance(cipherName, "BC");
         cipher.init(Cipher.ENCRYPT_MODE, secret);
         AlgorithmParameters parameters = cipher.getParameters();
-        byte iv[] = parameters.getParameterSpec(IvParameterSpec.class).getIV();
-        document.setIv(iv);
+        if (!this.streamMode) {
+            byte iv[] = parameters.getParameterSpec(IvParameterSpec.class).getIV();
+            document.setIv(iv);
+        }
         document.setHash(SHA256Generator.generateHash(document.getPayload()));
         byte[] ciphertext = cipher.doFinal(document.getPayload());
         document.setEncrypted(true);
@@ -62,8 +70,13 @@ public class AESDocumentEncryptorWithPBE implements DocumentEncryptor {
     public Document decrypt(Document document) throws GeneralSecurityException {
         Security.addProvider(new BouncyCastleProvider());
         SecretKey secret = generateSecret(document.getSalt());
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
-        cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(document.getIv()));
+        Cipher cipher = Cipher.getInstance(cipherName, "BC");
+
+        if (!streamMode)
+            cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(document.getIv()));
+        else
+            cipher.init(Cipher.DECRYPT_MODE, secret);
+
         byte[] cleartext = cipher.doFinal(document.getPayload());
         document.setPayload(cleartext);
         document.setEncrypted(false);
@@ -74,3 +87,4 @@ public class AESDocumentEncryptorWithPBE implements DocumentEncryptor {
         return document;
     }
 }
+

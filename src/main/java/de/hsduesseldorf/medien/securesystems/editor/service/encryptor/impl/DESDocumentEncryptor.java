@@ -14,7 +14,7 @@ import java.security.GeneralSecurityException;
 import java.security.Security;
 import java.util.Arrays;
 
-
+@Deprecated
 public class DESDocumentEncryptor implements DocumentEncryptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(DESDocumentEncryptor.class);

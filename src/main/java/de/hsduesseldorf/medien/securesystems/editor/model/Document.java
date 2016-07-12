@@ -21,6 +21,8 @@ public class Document {
 
     private byte[] iv;
 
+    private byte[] hash;
+
     private byte[] payload;
 
     private Boolean isEncrypted;
@@ -84,6 +86,14 @@ public class Document {
 
     public void setIv(byte[] iv) {
         this.iv = iv;
+    }
+
+    public byte[] getHash() {
+        return hash;
+    }
+
+    public void setHash(byte[] hash) {
+        this.hash = hash;
     }
 
     public byte[] getPayload() {

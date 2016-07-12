@@ -1,19 +1,17 @@
 package de.hsduesseldorf.medien.securesystems.editor.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.*;
 import java.io.File;
-import java.security.SecureRandom;
 import java.util.Date;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
 public class Document {
 
-    private static final byte[] DEFAULT_SALT = "salt".getBytes();
-
     private Date lastModified;
 
-    private Options options;
+    @XmlElement
+    private CipherName cipherName;
 
     private Integer payloadLength;
 
@@ -27,12 +25,13 @@ public class Document {
 
     private Boolean isEncrypted;
 
+    @XmlTransient
     private File file;
 
 
-    public Document(Date lastModified, Options options, Integer payloadLength, byte[] salt, byte[] iv, byte[] payload, File file) {
+    public Document(Date lastModified, CipherName cipherName, Integer payloadLength, byte[] salt, byte[] iv, byte[] payload, File file) {
         this.lastModified = lastModified;
-        this.options = options;
+        this.cipherName = cipherName;
         this.payloadLength = payloadLength;
         this.salt = salt;
         this.iv = iv;
@@ -40,16 +39,12 @@ public class Document {
         this.file = file;
     }
 
-    public Document(Date lastModified, Options options, Integer payloadLength, byte[] salt, byte[] payload, File file) {
-        this(lastModified, options, payloadLength, salt, null, payload, file);
-        this.iv = new byte[options.keySize];
-        new SecureRandom().nextBytes(iv);
+    public Document(Date lastModified, CipherName cipherName, Integer payloadLength, byte[] salt, byte[] payload, File file) {
+        this(lastModified, cipherName, payloadLength, salt, null, payload, file);
     }
 
-    public Document(Date lastModified, Options options, Integer payloadLength, byte[] payload, File file) {
-        this(lastModified, options, payloadLength, DEFAULT_SALT, null, payload, file);
-        this.iv = new byte[options.keySize];
-        new SecureRandom().nextBytes(iv);
+    public Document(Date lastModified, CipherName cipherName, Integer payloadLength, byte[] payload, File file) {
+        this(lastModified, cipherName, payloadLength, null, null, payload, file);
     }
 
     public Document() {
@@ -104,7 +99,6 @@ public class Document {
         this.payload = payload;
     }
 
-    @XmlTransient
     public File getFile() {
         return file;
     }
@@ -113,12 +107,12 @@ public class Document {
         this.file = file;
     }
 
-    public Options getOptions() {
-        return this.options;
+    public CipherName getCipherName() {
+        return this.cipherName;
     }
 
-    public void setOptions(Options options) {
-        this.options = options;
+    public void setCipherName(CipherName cipherName) {
+        this.cipherName = cipherName;
     }
 
     public Boolean getEncrypted() {

@@ -1,36 +1,27 @@
 package de.hsduesseldorf.medien.securesystems.editor.controller;
 
 import de.hsduesseldorf.medien.securesystems.editor.app.MainApp;
-import de.hsduesseldorf.medien.securesystems.editor.model.Options;
-import de.hsduesseldorf.medien.securesystems.editor.model.properties.BlockMode;
-import de.hsduesseldorf.medien.securesystems.editor.model.properties.CipherName;
-import de.hsduesseldorf.medien.securesystems.editor.model.properties.Padding;
+import de.hsduesseldorf.medien.securesystems.editor.model.CipherName;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.PasswordField;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class OptionsDialogController implements Initializable {
 
     MainApp mainApp;
-    Options selectedOptions;
+    CipherName selectedCipherName;
 
 
     @FXML
     ComboBox<CipherName> chipherSelection;
 
     @FXML
-    ComboBox<Integer> blockSizeSelection;
-
-    @FXML
-    ComboBox<BlockMode> blockModeSelection;
-
-    @FXML
-    ComboBox<Padding> paddingSelection;
+    PasswordField password;
 
     @FXML
     Button submitOptions;
@@ -39,17 +30,10 @@ public class OptionsDialogController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         submitOptions.setOnAction(evt -> submit());
         chipherSelection.getItems().setAll(CipherName.values());
-        chipherSelection.setOnAction((e -> updateSelectBoxes()));
-    }
-
-    private void updateSelectBoxes() {
-        blockModeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedBlockModi() : new ArrayList<BlockMode>());
-        paddingSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedPaddings() : new ArrayList<Padding>());
-        blockSizeSelection.getItems().setAll(chipherSelection.getValue() != null ? chipherSelection.getValue().getProvidedKeySizes() : new ArrayList<Integer>());
     }
 
     public void submit() {
-        this.selectedOptions = new Options(chipherSelection.getValue(), blockModeSelection.getValue(), paddingSelection.getValue(), blockSizeSelection.getValue());
+        this.selectedCipherName = chipherSelection.getValue();
         mainApp.getOptionsDialog().hide();
     }
 
@@ -58,11 +42,23 @@ public class OptionsDialogController implements Initializable {
         this.mainApp = mainApp;
     }
 
-    public Options getSelectedOptions() {
-        return selectedOptions;
+    public CipherName getSelectedCipherName() {
+        return chipherSelection.getValue();
     }
 
-    public void setSelectedOptions(Options selectedOptions) {
-        this.selectedOptions = selectedOptions;
+    public void setSelectedCipherName(CipherName selectedCipherName) {
+        chipherSelection.setValue(selectedCipherName);
+    }
+
+    public String getPassword() {
+        return this.password.getText();
+    }
+
+    public void setPassword(String passwordString) {
+        password.setText(passwordString);
+    }
+
+    public void disableComboBox(boolean disabled) {
+        chipherSelection.setDisable(disabled);
     }
 }

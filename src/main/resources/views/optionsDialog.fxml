@@ -2,12 +2,12 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="134.0" prefWidth="148.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hsduesseldorf.medien.securesystems.editor.controller.OptionsDialogController">
+<?import javafx.scene.control.PasswordField?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="84.0" prefWidth="148.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hsduesseldorf.medien.securesystems.editor.controller.OptionsDialogController">
     <ComboBox fx:id="chipherSelection" prefHeight="27.0" prefWidth="150.0" promptText="Cipher" />
-    <ComboBox fx:id="blockSizeSelection" prefHeight="27.0" prefWidth="150.0" promptText="BlockSize" />
-    <ComboBox fx:id="blockModeSelection" prefHeight="27.0" prefWidth="150.0" promptText="Mode" />
-    <ComboBox fx:id="paddingSelection" prefHeight="27.0" prefWidth="150.0" promptText="Padding" />
+   <PasswordField fx:id="password" />
     <Button fx:id="submitOptions" mnemonicParsing="false" prefHeight="26.0" prefWidth="151.0" text="OK" />
 </VBox>

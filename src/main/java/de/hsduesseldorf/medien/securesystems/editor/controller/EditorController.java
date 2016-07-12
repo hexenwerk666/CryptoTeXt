@@ -2,9 +2,11 @@ package de.hsduesseldorf.medien.securesystems.editor.controller;
 
 import de.hsduesseldorf.medien.securesystems.editor.app.MainApp;
 import de.hsduesseldorf.medien.securesystems.editor.model.Document;
-import de.hsduesseldorf.medien.securesystems.editor.model.Options;
+import de.hsduesseldorf.medien.securesystems.editor.service.encryptor.DocumentEncryptor;
+import de.hsduesseldorf.medien.securesystems.editor.service.encryptor.DocumentEncryptorFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
@@ -12,12 +14,17 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.crypto.BadPaddingException;
 import javax.xml.bind.DataBindingException;
 import javax.xml.bind.JAXB;
 import java.io.File;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.ResourceBundle;
+
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 public class EditorController implements Initializable {
 
@@ -62,63 +69,90 @@ public class EditorController implements Initializable {
     }
 
     boolean save() {
-        LOG.debug("Save..");
-        if (currentDocument == null) {
-            return this.saveAs();
-        }
-
-        optionsDialogController.setSelectedOptions(new Options(currentDocument.getOptions().getCipherName(), currentDocument.getOptions().getBlockMode(), currentDocument.getOptions().getPadding(), currentDocument.getOptions().getKeySize()));
-        mainApp.getOptionsDialog().showAndWait();
-
-        byte[] data = text.getText().getBytes();
-        Document document = new Document(new Date(), optionsDialogController.getSelectedOptions(), data.length, data, currentDocument.getFile());
 
         try {
-            JAXB.marshal(document, currentDocument.getFile());
-        } catch (DataBindingException e) {
+            LOG.debug("Save..");
+            if (currentDocument == null) {
+                return this.saveAs();
+            }
+
+            optionsDialogController.setSelectedCipherName(currentDocument.getCipherName());
+            mainApp.getOptionsDialog().showAndWait();
+
+            byte[] data = text.getText().getBytes();
+            Document document = new Document(new Date(), optionsDialogController.getSelectedCipherName(), data.length, data, currentDocument.getFile());
+
+            if (document.getCipherName() != null) {
+                DocumentEncryptor encryptor = DocumentEncryptorFactory.getInstance(optionsDialogController.getSelectedCipherName().name(), optionsDialogController.getPassword().toCharArray());
+                document = encryptor.encrypt(document);
+            }
+
+            try {
+                JAXB.marshal(document, currentDocument.getFile());
+            } catch (DataBindingException e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        } catch (GeneralSecurityException e) {
+            alertBox("Crypto error!", "An crypto error occured", ERROR);
             e.printStackTrace();
-            return false;
+        } finally {
+            optionsDialogController.setPassword(null);
         }
-        return true;
+        return false;
     }
 
     boolean saveAs() {
-        LOG.debug("Save as..");
-        this.abort = false;
-        Stage optionsDialog = mainApp.getOptionsDialog();
-
-        optionsDialog.setOnCloseRequest(evt -> {
-            this.abort = true;
-        });
-
-        optionsDialog.showAndWait();
-
-        if (abort) return false;
-
-        FileChooser fileChooser = new FileChooser();
-        if (currentDocument != null) {
-            fileChooser.setInitialDirectory(currentDocument.getFile().getParentFile());
-            fileChooser.setInitialFileName(currentDocument.getFile().getName());
-        } else {
-            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        }
-        fileChooser.setTitle("Save file");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*"));
-        File file = fileChooser.showSaveDialog(new Stage());
-        if (file == null) return false;
-
-        byte[] data = text.getText().getBytes();
-        Document document = new Document(new Date(), optionsDialogController.getSelectedOptions(), data.length, data, file);
-
         try {
-            JAXB.marshal(document, file);
-            currentDocument = document;
-            currentDocument.setFile(file);
-        } catch (DataBindingException e) {
+            LOG.debug("Save as..");
+            this.abort = false;
+            Stage optionsDialog = mainApp.getOptionsDialog();
+
+            optionsDialog.setOnCloseRequest(evt -> {
+                this.abort = true;
+            });
+
+            optionsDialog.showAndWait();
+
+            if (abort) return false;
+
+            FileChooser fileChooser = new FileChooser();
+            if (currentDocument != null) {
+                fileChooser.setInitialDirectory(currentDocument.getFile().getParentFile());
+                fileChooser.setInitialFileName(currentDocument.getFile().getName());
+            } else {
+                fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            }
+            fileChooser.setTitle("Save file");
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"), new FileChooser.ExtensionFilter("All Files", "*"));
+            File file = fileChooser.showSaveDialog(new Stage());
+            if (file == null) return false;
+
+            byte[] data = text.getText().getBytes();
+            Document document = new Document(new Date(), optionsDialogController.getSelectedCipherName(), data.length, data, file);
+
+            if (document.getCipherName() != null) {
+                DocumentEncryptor encryptor = DocumentEncryptorFactory.getInstance(optionsDialogController.getSelectedCipherName().name(), optionsDialogController.getPassword().toCharArray());
+                document = encryptor.encrypt(document);
+            }
+            try {
+                JAXB.marshal(document, file);
+                currentDocument = document;
+                currentDocument.setFile(file);
+            } catch (DataBindingException e) {
+                alertBox("Document error", "Could not save Document properly!", ERROR);
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        } catch (GeneralSecurityException e) {
+            alertBox("Crypto error!", "An crypto error occured", ERROR);
             e.printStackTrace();
-            return false;
+        } finally {
+            optionsDialogController.setPassword(null);
         }
-        return true;
+        return false;
     }
 
     boolean open() {
@@ -131,13 +165,39 @@ public class EditorController implements Initializable {
         if (file == null) return false;
         try {
             Document document = JAXB.unmarshal(file, Document.class);
+            if (document.getCipherName() != null) {
+                optionsDialogController.disableComboBox(true);
+                optionsDialogController.setPassword(null);
+                optionsDialogController.setSelectedCipherName(document.getCipherName());
+                this.abort = false;
+                Stage optionsDialog = mainApp.getOptionsDialog();
+                optionsDialog.setOnCloseRequest(evt -> {
+                    this.abort = true;
+                });
+                optionsDialog.showAndWait();
+                if (abort) return false;
+                optionsDialogController.disableComboBox(false);
+                String passwort = optionsDialogController.getPassword();
+                LOG.debug("password:"+passwort);
+                DocumentEncryptor encryptor = DocumentEncryptorFactory.getInstance(document.getCipherName().name(), passwort.toCharArray());
+                document = encryptor.decrypt(document);
+            }
             currentDocument = document;
             byte[] data = document.getPayload();
             text.setText(new String(data));
-            optionsDialogController.setSelectedOptions(document.getOptions());
+            optionsDialogController.setSelectedCipherName(document.getCipherName());
         } catch (DataBindingException e) {
+            alertBox("Document error", "Could not save Document properly!", ERROR);
             e.printStackTrace();
             return false;
+        } catch (BadPaddingException e) {
+            alertBox("Bad Password", "Please use the right password", INFORMATION);
+            e.printStackTrace();
+            return false;
+
+        } catch (GeneralSecurityException e) {
+            alertBox("Crypto error!", "An crypto error occured", ERROR);
+            e.printStackTrace();
         }
         currentDocument.setFile(file);
         return true;
@@ -146,5 +206,13 @@ public class EditorController implements Initializable {
     void quit() {
         LOG.debug("Quit..");
         System.exit(0);
+    }
+
+    void alertBox(String title, String content, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

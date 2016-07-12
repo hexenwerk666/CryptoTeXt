@@ -4,7 +4,7 @@ import de.hsduesseldorf.medien.securesystems.editor.service.encryptor.impl.PBEDo
 
 public class DocumentEncryptorFactory {
 
-    public DocumentEncryptor getInstance(String type, char[] password) {
+    public static DocumentEncryptor getInstance(String type, char[] password) {
         switch (type) {
             case "AES":
                 return new PBEDocumentEncryptor(password, 256, "AES/CBC/PKCS5Padding", "PBEWithSHA256And256BitAES-CBC-BC", false);

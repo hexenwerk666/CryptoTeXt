@@ -1,10 +1,7 @@
 package de.hsduesseldorf.medien.securesystems.editor.service.encryptor.impl;
 
 import de.hsduesseldorf.medien.securesystems.editor.model.Document;
-import de.hsduesseldorf.medien.securesystems.editor.model.Options;
-import de.hsduesseldorf.medien.securesystems.editor.model.properties.BlockMode;
-import de.hsduesseldorf.medien.securesystems.editor.model.properties.CipherName;
-import de.hsduesseldorf.medien.securesystems.editor.model.properties.Padding;
+import de.hsduesseldorf.medien.securesystems.editor.model.CipherName;
 import org.bouncycastle.util.encoders.Hex;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +20,6 @@ public class DESDocumentEncryptorTest {
             0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
 
     DESDocumentEncryptor cut;
-    Options options = new Options(CipherName.DES, BlockMode.ECB, Padding.PKCS7PADDING, 64);
-
 
 
     @Before
@@ -35,7 +30,7 @@ public class DESDocumentEncryptorTest {
     @Test
     public void encrypt() throws Exception {
         Document document = new Document();
-        document.setOptions(options);
+        document.setCipherName(CipherName.DES);
         document.setEncrypted(false);
         document.setPayloadLength(TEST_MESSAGE.length);
         document.setPayload(TEST_MESSAGE);
@@ -47,7 +42,7 @@ public class DESDocumentEncryptorTest {
     @Test
     public void decrypt() throws Exception {
         Document document = new Document();
-        document.setOptions(options);
+        document.setCipherName(CipherName.DES);
         document.setEncrypted(false);
         document.setPayload(TEST_MESSAGE);
         document.setPayloadLength(TEST_MESSAGE.length);

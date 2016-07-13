@@ -66,10 +66,10 @@ public class PBEDocumentEncryptor implements DocumentEncryptor {
     /**
      * Create a new instance.
      *
-     * @param password password to encrypt/ decrypt data
-     * @param keySize the key size
+     * @param password   password to encrypt/ decrypt data
+     * @param keySize    the key size
      * @param cipherName name of the used cipher
-     * @param pbeMethod name of the used pbe method
+     * @param pbeMethod  name of the used pbe method
      * @param streamMode {@code true} if no IV is required
      */
     public PBEDocumentEncryptor(char[] password, int keySize, String cipherName, String pbeMethod, boolean streamMode) {
@@ -82,12 +82,13 @@ public class PBEDocumentEncryptor implements DocumentEncryptor {
 
     /**
      * generate a new secret key
+     *
      * @param salt salt
      * @return secret key
      * @throws GeneralSecurityException
      */
     SecretKey generateSecret(byte[] salt) throws GeneralSecurityException {
-        SecretKeyFactory factory = SecretKeyFactory.getInstance(pbeMethod,"BC");
+        SecretKeyFactory factory = SecretKeyFactory.getInstance(pbeMethod, "BC");
         KeySpec spec = new PBEKeySpec(this.password, salt, iterCount, keySize);
         SecretKey secret = factory.generateSecret(spec);
         return secret;
@@ -95,6 +96,7 @@ public class PBEDocumentEncryptor implements DocumentEncryptor {
 
     /**
      * Encrypt a document
+     *
      * @param document document object
      * @return encrypted document object
      * @throws GeneralSecurityException
@@ -136,9 +138,11 @@ public class PBEDocumentEncryptor implements DocumentEncryptor {
 
     /**
      * Decrypt a document
+     *
      * @param document document object
      * @return decrypted document object
      * @throws GeneralSecurityException
+     * @throws InvalidChecksum          if the hash value is corrupted
      */
     @Override
     public Document decrypt(Document document) throws GeneralSecurityException {

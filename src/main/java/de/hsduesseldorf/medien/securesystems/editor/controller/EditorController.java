@@ -1,6 +1,7 @@
 package de.hsduesseldorf.medien.securesystems.editor.controller;
 
 import de.hsduesseldorf.medien.securesystems.editor.app.MainApp;
+import de.hsduesseldorf.medien.securesystems.editor.exception.InvalidChecksum;
 import de.hsduesseldorf.medien.securesystems.editor.model.Document;
 import de.hsduesseldorf.medien.securesystems.editor.service.encryptor.DocumentEncryptor;
 import de.hsduesseldorf.medien.securesystems.editor.service.encryptor.DocumentEncryptorFactory;
@@ -23,8 +24,7 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
+import static javafx.scene.control.Alert.AlertType.*;
 
 /**
  * The main controller handles all the events from the editors ui.
@@ -181,7 +181,7 @@ public class EditorController implements Initializable {
                 if (abort) return false;
                 optionsDialogController.disableComboBox(false);
                 String passwort = optionsDialogController.getPassword();
-                LOG.debug("password:"+passwort);
+                LOG.debug("password:" + passwort);
                 DocumentEncryptor encryptor = DocumentEncryptorFactory.getInstance(document.getCipherName().name(), passwort.toCharArray());
                 document = encryptor.decrypt(document);
             }
@@ -189,6 +189,9 @@ public class EditorController implements Initializable {
             byte[] data = document.getPayload();
             text.setText(new String(data));
             optionsDialogController.setSelectedCipherName(document.getCipherName());
+        } catch (InvalidChecksum e) {
+            alertBox("Corrupted checksum", "Document might be manipulated. The checksum is corrupted", WARNING);
+            return false;
         } catch (DataBindingException e) {
             alertBox("Document error", "Could not save Document properly!", ERROR);
             e.printStackTrace();

@@ -2,6 +2,8 @@ package de.hsduesseldorf.medien.securesystems.editor.service.encryptor.impl;
 
 import de.hsduesseldorf.medien.securesystems.editor.exception.InvalidChecksum;
 import de.hsduesseldorf.medien.securesystems.editor.model.Document;
+import de.hsduesseldorf.medien.securesystems.editor.service.encryptor.DocumentEncryptor;
+import de.hsduesseldorf.medien.securesystems.editor.service.encryptor.DocumentEncryptorFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,25 +26,25 @@ public class PBEDocumentEncryptorTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
-    List<PBEDocumentEncryptor> cut;
+    List<DocumentEncryptor> cut;
 
     @Before
     public void setup() throws Exception {
         // generate instances of all supported cipher and pbe combinations
         cut = new ArrayList<>();
-        cut.add(new PBEDocumentEncryptor(PASSWORD, 256, "AES/CBC/PKCS7Padding", "PBEWithSHA256And256BitAES-CBC-BC", false));
-        cut.add(new PBEDocumentEncryptor(PASSWORD, 64, "PBEWithSHAAnd3KeyTripleDES", "PBEWithSHAAnd3KeyTripleDES", true));
-        cut.add(new PBEDocumentEncryptor(PASSWORD, 128, "ARC4", "PBEWithSHAAnd128BitRC4", true));
+        cut.add(DocumentEncryptorFactory.getInstance("AES", PASSWORD));
+        cut.add(DocumentEncryptorFactory.getInstance("DES", PASSWORD));
+        cut.add(DocumentEncryptorFactory.getInstance("ARC4", PASSWORD));
     }
 
     @Test
     public void encrypt() throws Exception {
-        for (PBEDocumentEncryptor p : cut) {
+        for (DocumentEncryptor e : cut) {
             Document document = new Document();
             document.setPayload(TEST_MESSAGE);
             document.setPayloadLength(TEST_MESSAGE.length);
             document.setEncrypted(false);
-            document = p.encrypt(document);
+            document = e.encrypt(document);
             LOG.debug("cleartext lenght:\t" + TEST_MESSAGE.length);
             LOG.debug("ciphertext length:\t" + document.getPayload().length);
             Assert.assertNotEquals(new String(TEST_MESSAGE), new String(document.getPayload()));
@@ -52,13 +54,13 @@ public class PBEDocumentEncryptorTest {
 
     @Test
     public void decrypt() throws Exception {
-        for (PBEDocumentEncryptor p : cut) {
+        for (DocumentEncryptor e : cut) {
             Document document = new Document();
             document.setPayload(TEST_MESSAGE);
             document.setPayloadLength(TEST_MESSAGE.length);
             document.setEncrypted(false);
-            document = p.encrypt(document);
-            document = p.decrypt(document);
+            document = e.encrypt(document);
+            document = e.decrypt(document);
             LOG.debug("cleartext lenght:\t" + TEST_MESSAGE.length);
             LOG.debug("ciphertext length:\t" + document.getPayload().length);
             Assert.assertEquals(new String(TEST_MESSAGE), new String(document.getPayload()));
@@ -68,15 +70,15 @@ public class PBEDocumentEncryptorTest {
 
     @Test
     public void decrypt_invalid_checkup() throws Exception {
-        for (PBEDocumentEncryptor p : cut) {
+        for (DocumentEncryptor e : cut) {
             Document document = new Document();
             document.setPayload(TEST_MESSAGE);
             document.setPayloadLength(TEST_MESSAGE.length);
             document.setEncrypted(false);
-            document = p.encrypt(document);
+            document = e.encrypt(document);
             document.getPayload()[0] = 0x01;
             exception.expect(InvalidChecksum.class);
-            p.decrypt(document);
+            e.decrypt(document);
         }
 
     }

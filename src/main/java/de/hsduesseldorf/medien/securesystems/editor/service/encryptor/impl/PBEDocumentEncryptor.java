@@ -59,9 +59,9 @@ public class PBEDocumentEncryptor implements DocumentEncryptor {
     String pbeMethod;
 
     /**
-     * {@code true} if no IV is required
+     * {@code true} if an IV is required
      */
-    boolean streamMode;
+    boolean ivRequired;
 
     /**
      * Create a new instance.
@@ -70,14 +70,14 @@ public class PBEDocumentEncryptor implements DocumentEncryptor {
      * @param keySize    the key size
      * @param cipherName name of the used cipher
      * @param pbeMethod  name of the used pbe method
-     * @param streamMode {@code true} if no IV is required
+     * @param ivRequired {@code true} if no IV is required
      */
-    public PBEDocumentEncryptor(char[] password, int keySize, String cipherName, String pbeMethod, boolean streamMode) {
+    public PBEDocumentEncryptor(char[] password, int keySize, String cipherName, String pbeMethod, boolean ivRequired) {
         this.password = password;
         this.keySize = keySize;
         this.cipherName = cipherName;
         this.pbeMethod = pbeMethod;
-        this.streamMode = streamMode;
+        this.ivRequired = ivRequired;
     }
 
     /**
@@ -120,7 +120,7 @@ public class PBEDocumentEncryptor implements DocumentEncryptor {
         AlgorithmParameters parameters = cipher.getParameters();
 
         // IV is only required for block cipher
-        if (!this.streamMode) {
+        if (this.ivRequired) {
             // generate iv and store it to the xml document
             byte iv[] = parameters.getParameterSpec(IvParameterSpec.class).getIV();
             document.setIv(iv);
@@ -153,7 +153,7 @@ public class PBEDocumentEncryptor implements DocumentEncryptor {
         Cipher cipher = Cipher.getInstance(cipherName, "BC");
 
         // IV is only required for block cipher
-        if (!streamMode)
+        if (ivRequired)
             // get IV from the xml document
             cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(document.getIv()));
         else

@@ -18,11 +18,11 @@ public class DocumentEncryptorFactory {
     public static DocumentEncryptor getInstance(String type, char[] password) {
         switch (type) {
             case "AES":
-                return new PBEDocumentEncryptor(password, 256, "AES/CBC/PKCS5Padding", "PBEWithSHA256And256BitAES-CBC-BC", false);
+                return new PBEDocumentEncryptor(password, 256, "AES/CBC/PKCS5Padding", "PBEWithSHA256And256BitAES-CBC-BC", true);
             case "DES":
-                return new PBEDocumentEncryptor(password, 64, "PBEWithSHAAnd3KeyTripleDES", "PBEWithSHAAnd3KeyTripleDES", true);
+                return new PBEDocumentEncryptor(password, 64, "PBEWithSHAAnd3KeyTripleDES", "PBEWithSHAAnd3KeyTripleDES", false);
             case "ARC4":
-                return new PBEDocumentEncryptor(password, 128, "ARC4", "PBEWithSHAAnd128BitRC4", true);
+                return new PBEDocumentEncryptor(password, 128, "ARC4", "PBEWithSHAAnd128BitRC4", false);
             default:
                 throw new IllegalArgumentException("The cipher type <" + type + "> is not supported.");
         }

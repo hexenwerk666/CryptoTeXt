@@ -26,6 +26,9 @@ import java.util.ResourceBundle;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
+/**
+ * The main controller handles all the events from the editors ui.
+ */
 public class EditorController implements Initializable {
 
     static final Logger LOG = LoggerFactory.getLogger(EditorController.class);

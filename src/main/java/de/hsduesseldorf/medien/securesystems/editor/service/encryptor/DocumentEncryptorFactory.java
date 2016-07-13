@@ -2,8 +2,19 @@ package de.hsduesseldorf.medien.securesystems.editor.service.encryptor;
 
 import de.hsduesseldorf.medien.securesystems.editor.service.encryptor.impl.PBEDocumentEncryptor;
 
+/**
+ * factory provides several implementations of the interface {@link DocumentEncryptor}
+ */
 public class DocumentEncryptorFactory {
 
+    /**
+     * get an instance by the type
+     *
+     * @param type     concrete type
+     * @param password password to encrypt the data
+     * @return an concrete instance of {@link DocumentEncryptor}
+     * @throws IllegalArgumentException thrown if the type is not supported
+     */
     public static DocumentEncryptor getInstance(String type, char[] password) {
         switch (type) {
             case "AES":

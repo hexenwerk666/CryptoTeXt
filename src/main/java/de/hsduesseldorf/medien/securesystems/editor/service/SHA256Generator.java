@@ -8,6 +8,13 @@ import java.security.Security;
 
 public class SHA256Generator {
 
+    /**
+     * Generate SHA-256 hashes to void manipulations of the stored data
+     *
+     * @param message stored data
+     * @return hash of the stored data
+     * @throws GeneralSecurityException
+     */
     public static byte[] generateHash(byte[] message) throws GeneralSecurityException {
         Security.addProvider(new BouncyCastleProvider());
         MessageDigest md = MessageDigest.getInstance("SHA-256", "BC");

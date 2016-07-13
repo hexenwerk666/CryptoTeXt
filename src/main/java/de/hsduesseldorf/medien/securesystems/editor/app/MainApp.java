@@ -12,11 +12,16 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * main class where the application is started initially
+ */
 public class MainApp extends Application {
 
+    // stages
     private Stage primaryStage;
     private Stage optionsDialog;
 
+    // controller
     private OptionsDialogController optionsDialogController;
     private EditorController editorController;
 

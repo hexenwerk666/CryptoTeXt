@@ -25,12 +25,12 @@ public class DESDocumentEncryptor implements DocumentEncryptor {
     @Override
     public Document encrypt(Document document) throws GeneralSecurityException {
         Security.addProvider(new BouncyCastleProvider());
-        String optionsParam = "DES/ECB/PKCS7PADDING";
+        String cipherType = "DES/ECB/PKCS7PADDING";
         SecretKeySpec key = new SecretKeySpec(keyBytes, "DES");
 
         byte[] input = Arrays.copyOf(document.getPayload(), document.getPayload().length);
 
-        Cipher cipher = Cipher.getInstance(optionsParam, "BC");
+        Cipher cipher = Cipher.getInstance(cipherType, "BC");
 
         LOG.debug("input : " + Hex.toHexString(input));
 
@@ -50,14 +50,14 @@ public class DESDocumentEncryptor implements DocumentEncryptor {
     @Override
     public Document decrypt(Document document) throws GeneralSecurityException {
         Security.addProvider(new BouncyCastleProvider());
-        String optionsParam = "DES/ECB/PKCS7PADDING";
+        String cipherType = "DES/ECB/PKCS7PADDING";
         SecretKeySpec key = new SecretKeySpec(keyBytes, "DES");
 
         byte[] cipherText = Arrays.copyOf(document.getPayload(), document.getPayload().length);
 
         int ctLength = cipherText.length;
 
-        Cipher cipher = Cipher.getInstance(optionsParam, "BC");
+        Cipher cipher = Cipher.getInstance(cipherType, "BC");
 
         cipher.init(Cipher.DECRYPT_MODE, key);
 

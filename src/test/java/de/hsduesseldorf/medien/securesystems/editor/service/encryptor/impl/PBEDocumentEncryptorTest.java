@@ -28,8 +28,9 @@ public class PBEDocumentEncryptorTest {
 
     @Before
     public void setup() throws Exception {
+        // generate instances of all supported cipher and pbe combinations
         cut = new ArrayList<>();
-        cut.add(new PBEDocumentEncryptor(PASSWORD, 256, "AES/CBC/PKCS5Padding", "PBEWithSHA256And256BitAES-CBC-BC", false));
+        cut.add(new PBEDocumentEncryptor(PASSWORD, 256, "AES/CBC/PKCS7Padding", "PBEWithSHA256And256BitAES-CBC-BC", false));
         cut.add(new PBEDocumentEncryptor(PASSWORD, 64, "PBEWithSHAAnd3KeyTripleDES", "PBEWithSHAAnd3KeyTripleDES", true));
         cut.add(new PBEDocumentEncryptor(PASSWORD, 128, "ARC4", "PBEWithSHAAnd128BitRC4", true));
     }

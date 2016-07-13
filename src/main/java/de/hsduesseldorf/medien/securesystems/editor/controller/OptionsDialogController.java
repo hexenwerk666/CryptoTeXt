@@ -11,6 +11,9 @@ import javafx.scene.control.PasswordField;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * This controller handles all events on the options dialog
+ */
 public class OptionsDialogController implements Initializable {
 
     MainApp mainApp;
